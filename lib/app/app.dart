@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'utils/strings_manager.dart';
+import '/app/utils/theme_manager.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp._internal();
@@ -13,11 +15,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Todo',
+      title: AppStrings.appName,
+      theme: ThemeManager.lightTheme(),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Todo App'),
-          centerTitle: true,
+          title: const Text(AppStrings.appName),
         ),
         body: const Center(
           child: FlutterLogo(),
