@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1037098895285",
+    "project_id": "things-todo-fd844",
+    "storage_bucket": "things-todo-fd844.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1037098895285:android:cacded23f953f49a90fbfc",
+        "android_client_info": {
+          "package_name": "com.thingsToDo.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1037098895285-tbb5tat20v3p8k8kqcb788q1nqv84p8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqsArCk6lalspnGf3UuIMBdnBr9_LDjfA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1037098895285-tbb5tat20v3p8k8kqcb788q1nqv84p8e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
