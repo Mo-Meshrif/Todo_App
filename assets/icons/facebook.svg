@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="162" height="162" viewBox="0 0 162 162">
+  <defs>
+    <filter id="Path_4" x="0" y="0" width="162" height="162" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_10" data-name="Group 10" transform="translate(-351 -1619)">
+    <g transform="matrix(1, 0, 0, 1, 351, 1619)" filter="url(#Path_4)">
+      <path id="Path_4-2" data-name="Path 4" d="M72,0A72,72,0,1,1,0,72,72,72,0,0,1,72,0Z" transform="translate(9 6)" fill="#3b5998"/>
+    </g>
+    <g id="facebook" transform="translate(339.297 1665)">
+      <path id="XMLID_835_" d="M77.725,33.739h6.944V62.326a1.022,1.022,0,0,0,1.022,1.022H97.464a1.022,1.022,0,0,0,1.022-1.022V33.874h7.983a1.022,1.022,0,0,0,1.015-.905L108.7,22.444a1.022,1.022,0,0,0-1.015-1.139H98.486v-6.6c0-1.989,1.071-3,3.183-3h6.012A1.022,1.022,0,0,0,108.7,10.69V1.029A1.022,1.022,0,0,0,107.681.008H99.4C99.337,0,99.208,0,99.016,0A15.877,15.877,0,0,0,88.635,3.913a10.887,10.887,0,0,0-3.62,9.678v7.715h-7.29A1.022,1.022,0,0,0,76.7,22.327v10.39A1.022,1.022,0,0,0,77.725,33.739Z" fill="#fff"/>
+    </g>
+  </g>
+</svg>
