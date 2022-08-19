@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'utils/routes_manager.dart';
 import 'utils/strings_manager.dart';
 import '/app/utils/theme_manager.dart';
 
@@ -17,14 +18,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: AppStrings.appName,
       theme: ThemeManager.lightTheme(),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(AppStrings.appName),
-        ),
-        body: const Center(
-          child: FlutterLogo(),
-        ),
-      ),
+      onGenerateRoute: RouteGenerator.getRoute,
     );
   }
 }
