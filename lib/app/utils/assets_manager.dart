@@ -24,4 +24,6 @@ class IconAssets {
   static const String search = "$iconPath/search.svg";
   static const String edit = "$iconPath/edit.svg";
   static const String delete = "$iconPath/delete.svg";
+  static const String user = "$iconPath/user.svg";
+  static const String password = "$iconPath/password.svg";
 }
