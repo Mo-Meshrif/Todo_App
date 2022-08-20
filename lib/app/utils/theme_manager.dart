@@ -13,6 +13,18 @@ class ThemeManager {
         centerTitle: false,
         color: ColorManager.primary,
       ),
+      // input decoration theme (text form field)
+      inputDecorationTheme: const InputDecorationTheme(
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        hintStyle: TextStyle(color: Colors.grey),
+        border: InputBorder.none,
+      ),
+      // elevated button them
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          primary: ColorManager.primary,
+        ),
+      ),
     );
   }
 }
