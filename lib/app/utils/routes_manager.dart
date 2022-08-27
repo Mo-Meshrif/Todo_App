@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import '../helper/shared_helper.dart';
+import '../services/services_locator.dart';
 import '/modules/home/presentation/screens/home_screen.dart';
 import '/modules/auth/presentation/screens/login_screen.dart';
+import 'constants_manager.dart';
 
 class Routes {
   static const String loginRoute = "/login";
@@ -26,8 +29,9 @@ class RouteGenerator {
     return MaterialPageRoute(
       builder: (_) {
         FlutterNativeSplash.remove();
-        //TODO toggle between LoginScreen and HomeScreen
-        return const LoginScreen();
+        AppShared appShared = sl<AppShared>();
+        bool passLogin = appShared.getVal(AppConstants.passLoginKey) ?? false;
+        return passLogin ? const HomeScreen() : const LoginScreen();
       },
     );
   }
