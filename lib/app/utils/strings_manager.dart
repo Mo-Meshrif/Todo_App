@@ -1,5 +1,5 @@
 class AppStrings{
-  static const appName = "Things ToDo";
+  static const appName = "Things-Todo";
   static const userName ='Username';
   static const email ='Email';
   static const password ='Password';
