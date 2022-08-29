@@ -5,7 +5,6 @@ import 'package:get_storage/get_storage.dart';
 import 'app/app.dart';
 import 'app/services/services_locator.dart';
 
-bool isDialogShowing = false;
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
