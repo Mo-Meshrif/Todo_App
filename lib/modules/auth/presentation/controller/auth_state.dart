@@ -9,9 +9,17 @@ abstract class AuthState extends Equatable {
 
 class AuthInitial extends AuthState {}
 
+class AuthTranstion extends AuthState {}
+class AuthChanged extends AuthState {
+  final bool currentState;
+
+  const AuthChanged({required this.currentState});
+}
+
 class AuthLoading extends AuthState {}
 
 class AuthPopUpLoading extends AuthState {}
+
 class AuthSuccess extends AuthState {
   final AuthUser user;
   const AuthSuccess({required this.user});

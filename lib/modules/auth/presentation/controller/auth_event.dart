@@ -7,6 +7,10 @@ abstract class AuthEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class AuthToggleEvent extends AuthEvent {
+  final bool prevState;
+  const AuthToggleEvent({required this.prevState});
+}
 class LoginEvent extends AuthEvent {
   final LoginInputs loginInputs;
   const LoginEvent({required this.loginInputs});

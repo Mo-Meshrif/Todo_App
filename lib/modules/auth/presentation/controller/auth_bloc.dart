@@ -35,6 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.twitterUseCase,
     required this.googleUseCase,
   }) : super(AuthInitial()) {
+    on<AuthToggleEvent>(_toggle);
     on<LoginEvent>(_login);
     on<SignUpEvent>(_signUp);
     on<ForgetPasswordEvent>(_forgetPassword);
@@ -42,6 +43,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<FacebookLoginEvent>(_facebookLogin);
     on<TwitterLoginEvent>(_twitterLogin);
     on<GoogleLoginEvent>(_googleLogin);
+  }
+
+  FutureOr<void> _toggle(AuthToggleEvent event, Emitter<AuthState> emit) {
+    emit(AuthTranstion());
+    emit(AuthChanged(currentState:!event.prevState ));
   }
 
   FutureOr<void> _login(LoginEvent event, Emitter<AuthState> emit) async {

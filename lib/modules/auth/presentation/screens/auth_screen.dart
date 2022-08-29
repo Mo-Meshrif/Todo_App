@@ -22,7 +22,9 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLogin = true;
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final TextEditingController _nameController = TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _passwordController = TextEditingController();
     final TextEditingController _forgetPassController = TextEditingController();
@@ -56,6 +58,8 @@ class AuthScreen extends StatelessWidget {
             } else if (state is AuthSocialPass) {
               ctx.read<AuthBloc>().add(SignInWithCredentialEvent(
                   authCredential: state.authCredential));
+            } else if (state is AuthChanged) {
+              isLogin = state.currentState;
             }
           },
           builder: (context, state) => Form(
@@ -64,7 +68,7 @@ class AuthScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 144.w),
               child: Column(
                 children: [
-                  SizedBox(height: AppSize.s250.h),
+                  SizedBox(height: AppSize.s189.h),
                   Center(
                     child: SvgPicture.asset(
                       ImageAssets.logo,
@@ -85,6 +89,26 @@ class AuthScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
+                            Visibility(
+                              visible: !isLogin,
+                              child: Column(
+                                children: [
+                                  CustomTextFormField(
+                                    controller: _nameController,
+                                    iconName: IconAssets.user,
+                                    hintText: AppStrings.userName,
+                                    validator: (val) {
+                                      if (val!.isEmpty) {
+                                        return AppStrings.enterName;
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                  ),
+                                  Divider(color: ColorManager.border),
+                                ],
+                              ),
+                            ),
                             CustomTextFormField(
                               controller: _emailController,
                               iconName: IconAssets.user,
@@ -119,69 +143,72 @@ class AuthScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          final GlobalKey<FormState> _forgetKey =
-                              GlobalKey<FormState>();
-                          HelperFunctions.showAlert(
-                            context: context,
-                            title: AppStrings.forgetPassword,
-                            content: Form(
-                              key: _forgetKey,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: AppPadding.p10,
+                      Visibility(
+                        visible: isLogin,
+                        child: TextButton(
+                          onPressed: () {
+                            final GlobalKey<FormState> _forgetKey =
+                                GlobalKey<FormState>();
+                            HelperFunctions.showAlert(
+                              context: context,
+                              title: AppStrings.forgetPassword,
+                              content: Form(
+                                key: _forgetKey,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: AppPadding.p10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: ColorManager.border),
+                                  ),
+                                  child: CustomTextFormField(
+                                    controller: _forgetPassController,
+                                    iconName: IconAssets.user,
+                                    hintText: AppStrings.email,
+                                    validator: (val) {
+                                      if (val!.isEmpty) {
+                                        return AppStrings.enterEmail;
+                                      } else if (!HelperFunctions.isEmailValid(
+                                          val.toString())) {
+                                        return AppStrings.notVaildEmail;
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                  ),
                                 ),
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: ColorManager.border),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text(AppStrings.cancel),
+                                  style: TextButton.styleFrom(
+                                      primary: ColorManager.primary),
+                                  onPressed: () => Navigator.pop(context),
                                 ),
-                                child: CustomTextFormField(
-                                  controller: _forgetPassController,
-                                  iconName: IconAssets.user,
-                                  hintText: AppStrings.email,
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return AppStrings.enterEmail;
-                                    } else if (!HelperFunctions.isEmailValid(
-                                        val.toString())) {
-                                      return AppStrings.notVaildEmail;
-                                    } else {
-                                      return null;
+                                TextButton(
+                                  child: const Text(AppStrings.rest),
+                                  style: TextButton.styleFrom(
+                                      primary: ColorManager.primary),
+                                  onPressed: () {
+                                    if (_forgetKey.currentState!.validate()) {
+                                      _forgetKey.currentState!.save();
+                                      Navigator.of(context).pop();
+                                      context.read<AuthBloc>().add(
+                                            ForgetPasswordEvent(
+                                              email: _forgetPassController.text,
+                                            ),
+                                          );
                                     }
                                   },
                                 ),
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                child: const Text(AppStrings.cancel),
-                                style: TextButton.styleFrom(
-                                    primary: ColorManager.primary),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                              TextButton(
-                                child: const Text(AppStrings.rest),
-                                style: TextButton.styleFrom(
-                                    primary: ColorManager.primary),
-                                onPressed: () {
-                                  if (_forgetKey.currentState!.validate()) {
-                                    _forgetKey.currentState!.save();
-                                    Navigator.of(context).pop();
-                                    context.read<AuthBloc>().add(
-                                          ForgetPasswordEvent(
-                                            email: _forgetPassController.text,
-                                          ),
-                                        );
-                                  }
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                        style:
-                            TextButton.styleFrom(primary: ColorManager.border),
-                        child: const Text(AppStrings.forgetPassword),
+                              ],
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                              primary: ColorManager.border),
+                          child: const Text(AppStrings.forgetPassword),
+                        ),
                       ),
                     ],
                   ),
@@ -205,7 +232,7 @@ class AuthScreen extends StatelessWidget {
                                     );
                               }
                             },
-                            child: const Text(AppStrings.login),
+                            child:  Text(isLogin?AppStrings.loginButton:AppStrings.signUpButton),
                           ),
                   ),
                   SizedBox(height: AppSize.s48.h),
@@ -254,16 +281,21 @@ class AuthScreen extends StatelessWidget {
                   ),
                   SizedBox(height: AppSize.s80.h),
                   TextButton(
-                    onPressed: () {
-                      //TODO toggle between login and signUp
-                    },
+                    onPressed: () => context
+                        .read<AuthBloc>()
+                        .add(AuthToggleEvent(prevState: isLogin)),
                     child: RichText(
                       text: TextSpan(
                         style: const TextStyle(color: Colors.black),
                         children: [
-                          const TextSpan(text: AppStrings.noAccount),
                           TextSpan(
-                            text: AppStrings.signUp,
+                            text: isLogin
+                                ? AppStrings.noAccount
+                                : AppStrings.haveAccount,
+                          ),
+                          TextSpan(
+                            text:
+                                isLogin ? AppStrings.signUp : AppStrings.login,
                             style: TextStyle(color: ColorManager.primary),
                           ),
                         ],
