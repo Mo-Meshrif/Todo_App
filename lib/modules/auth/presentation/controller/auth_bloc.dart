@@ -3,6 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../app/utils/constants_manager.dart';
+import '../../../../app/utils/strings_manager.dart';
 import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
 import '/app/usecase/base_use_case.dart';
 import '/modules/auth/domain/entities/user.dart';
@@ -47,7 +49,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, dynamic> result =
         await loginUseCase(event.loginInputs);
     result.fold(
-      (failure) => emit(AuthFailure(msg: failure.msg)),
+      (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (user) => emit(AuthSuccess(user: user)),
     );
   }
@@ -57,7 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, AuthUser> result =
         await signUpUseCase(event.signUpInputs);
     result.fold(
-      (failure) => emit(AuthFailure(msg: failure.msg)),
+      (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (user) => emit(AuthSuccess(user: user)),
     );
   }
@@ -68,7 +70,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, bool> result =
         await forgetPasswordUseCase(event.email);
     result.fold(
-      (failure) => emit(AuthFailure(isPopup: true, msg: failure.msg)),
+      (failure) => emit(
+        AuthFailure(
+          isPopup: true,
+          msg: _handleAuthExceptions(failure.msg),
+        ),
+      ),
       (isRested) => emit(AuthRestSuccess(isRested: isRested)),
     );
   }
@@ -79,7 +86,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, AuthUser> authResult =
         await signInWithCredentialUseCase(event.authCredential);
     authResult.fold(
-      (failure) => emit(AuthFailure(isPopup: true, msg: failure.msg)),
+      (failure) => emit(
+        AuthFailure(
+          isPopup: true,
+          msg: _handleAuthExceptions(failure.msg),
+        ),
+      ),
       (user) => emit(AuthSuccess(user: user)),
     );
   }
@@ -89,7 +101,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, AuthCredential> result =
         await facebookUseCase(const NoParameters());
     result.fold(
-      (failure) => emit(AuthFailure(msg: failure.msg)),
+      (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (authCredential) => emit(AuthSocialPass(authCredential: authCredential)),
     );
   }
@@ -99,7 +111,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, AuthCredential> result =
         await twitterUseCase(const NoParameters());
     result.fold(
-      (failure) => emit(AuthFailure(msg: failure.msg)),
+      (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (authCredential) => emit(AuthSocialPass(authCredential: authCredential)),
     );
   }
@@ -109,8 +121,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, AuthCredential> result =
         await googleUseCase(const NoParameters());
     result.fold(
-      (failure) => emit(AuthFailure(msg: failure.msg)),
+      (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (authCredential) => emit(AuthSocialPass(authCredential: authCredential)),
     );
+  }
+
+  String _handleAuthExceptions(String msg) {
+    if (msg.contains(AppConstants.invaildEmail)) {
+      return AppStrings.invaildEmail;
+    } else if (msg.contains(AppConstants.userDisabled)) {
+      return AppStrings.userDisabled;
+    } else if (msg.contains(AppConstants.userNotFound)) {
+      return AppStrings.userNotFound;
+    } else if (msg.contains(AppConstants.wrongPassword)) {
+      return AppStrings.wrongPassword;
+    } else if (msg.contains(AppConstants.emailUsed)) {
+      return AppStrings.emailUsed;
+    } else if (msg.contains(AppConstants.opNotAllowed)) {
+      return AppStrings.opNotAllowed;
+    } else if (msg == AppConstants.noConnection) {
+      return AppStrings.noConnection;
+    } else if (msg == AppConstants.emptyVal) {
+      return AppConstants.emptyVal;
+    } else {
+      return AppStrings.operationFailed;
+    }
   }
 }
