@@ -3,7 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import '../helper/shared_helper.dart';
 import '../services/services_locator.dart';
 import '/modules/home/presentation/screens/home_screen.dart';
-import '/modules/auth/presentation/screens/login_screen.dart';
+import '../../modules/auth/presentation/screens/auth_screen.dart';
 import 'constants_manager.dart';
 
 class Routes {
@@ -17,7 +17,7 @@ class RouteGenerator {
   static Route<dynamic> getRoute(RouteSettings settings) {
     switch (settings.name) {
       case Routes.loginRoute:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(builder: (_) => const AuthScreen());
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (_) => const HomeScreen());   
       default:
@@ -30,8 +30,8 @@ class RouteGenerator {
       builder: (_) {
         FlutterNativeSplash.remove();
         AppShared appShared = sl<AppShared>();
-        bool passLogin = appShared.getVal(AppConstants.passLoginKey) ?? false;
-        return passLogin ? const HomeScreen() : const LoginScreen();
+        bool authPass = appShared.getVal(AppConstants.authPassKey) ?? false;
+        return authPass ? const HomeScreen() : const AuthScreen();
       },
     );
   }

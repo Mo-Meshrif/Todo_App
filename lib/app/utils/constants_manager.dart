@@ -18,6 +18,6 @@ class AppConstants {
   static const String noConnection = 'NO_INTERNET_CONNECTION';
   static const String emptyVal = '';
   static const String userKey = 'userKey';
-  static const String passLoginKey = 'passLoginKey';
+  static const String authPassKey = 'authPassKey';
   static const int durationInSec = 3;
 }

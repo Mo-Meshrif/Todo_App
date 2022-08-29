@@ -17,8 +17,8 @@ import '../widgets/custom_social_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '/app/utils/assets_manager.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class AuthScreen extends StatelessWidget {
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
             if (state is AuthPopUpLoading) {
               HelperFunctions.showPopUpLoading(context);
             } else if (state is AuthSuccess) {
-              sl<AppShared>().setVal(AppConstants.passLoginKey, true);
+              sl<AppShared>().setVal(AppConstants.authPassKey, true);
               sl<AppShared>().setVal(AppConstants.userKey, state.user);
               Navigator.of(ctx).pushReplacementNamed(Routes.homeRoute);
               _emailController.clear();
