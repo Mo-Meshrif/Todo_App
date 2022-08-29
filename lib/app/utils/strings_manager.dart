@@ -3,13 +3,17 @@ class AppStrings {
   static const userName = 'Username';
   static const email = 'Email';
   static const password = 'Password';
-  static const login = 'LOGIN';
+  static const loginButton = 'LOGIN';
+  static const signUpButton = 'SIGNUP';
   static const forgetPassword = 'Forget Password ?';
   static const or = 'OR';
   static const loginUsingSm = 'login using social media';
   static const noAccount = "Don't have an account ? ";
+  static const haveAccount = "Have an account ? ";
+  static const login = 'LogIn';
   static const signUp = 'SignUp';
   static const loading = 'Loading...';
+  static const enterName = 'Enter your name,please !';
   static const enterEmail = 'Enter your email,please !';
   static const notVaildEmail = 'Your email not valid !';
   static const enterPassword = 'Enter your password,please !';
@@ -22,7 +26,8 @@ class AppStrings {
   static const userNotFound = 'No user found with this email.';
   static const wrongPassword = 'Wrong email/password combination.';
   static const emailUsed = 'Email already used. Go to login page.';
-  static const opNotAllowed = 'Too many requests to log into this account,try later.';
+  static const opNotAllowed =
+      'Too many requests to log into this account,try later.';
   static const noConnection = 'No internet connection !';
   static const operationFailed = 'Operation failed,please try again.';
 }
