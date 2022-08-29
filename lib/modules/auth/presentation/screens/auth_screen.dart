@@ -98,6 +98,7 @@ class AuthScreen extends StatelessWidget {
                                     controller: _nameController,
                                     iconName: IconAssets.user,
                                     hintText: AppStrings.userName,
+                                    textInputAction: TextInputAction.next,
                                     validator: (val) {
                                       if (val!.isEmpty) {
                                         return AppStrings.enterName;
@@ -114,6 +115,7 @@ class AuthScreen extends StatelessWidget {
                               controller: _emailController,
                               iconName: IconAssets.email,
                               hintText: AppStrings.email,
+                             textInputAction: TextInputAction.next,
                               validator: (val) {
                                 if (val!.isEmpty) {
                                   return AppStrings.enterEmail;
@@ -130,6 +132,7 @@ class AuthScreen extends StatelessWidget {
                               controller: _passwordController,
                               iconName: IconAssets.password,
                               hintText: AppStrings.password,
+                              textInputAction: TextInputAction.done,
                               isPassword: true,
                               validator: (val) {
                                 if (val!.isEmpty) {
@@ -167,6 +170,7 @@ class AuthScreen extends StatelessWidget {
                                     controller: _forgetPassController,
                                     iconName: IconAssets.email,
                                     hintText: AppStrings.email,
+                                    textInputAction: TextInputAction.done,
                                     validator: (val) {
                                       if (val!.isEmpty) {
                                         return AppStrings.enterEmail;

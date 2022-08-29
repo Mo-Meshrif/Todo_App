@@ -6,6 +6,7 @@ class CustomTextFormField extends StatelessWidget {
   final String iconName;
   final String hintText;
   final bool isPassword;
+  final TextInputAction textInputAction;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   const CustomTextFormField({
@@ -15,6 +16,7 @@ class CustomTextFormField extends StatelessWidget {
     required this.controller,
     this.validator,
     this.isPassword = false,
+    required this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -35,10 +37,9 @@ class CustomTextFormField extends StatelessWidget {
                       Expanded(
                         child: TextFormField(
                           controller: controller,
-                          obscureText: isPassword
-                              ? isPassObscure
-                              : false,
+                          obscureText: isPassword ? isPassObscure : false,
                           validator: validator,
+                          textInputAction: textInputAction,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           decoration: InputDecoration(
                             hintText: hintText,
