@@ -1,15 +1,14 @@
 import 'package:dartz/dartz.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../app/errors/failure.dart';
-import '../entities/user.dart';
 import '../repositories/base_auth_repository.dart';
 import '/app/usecase/base_use_case.dart';
 
 class FacebookUseCase
-    implements BaseUseCase<Either<Failure, User>, NoParameters> {
+    implements BaseUseCase<Either<Failure, AuthCredential>, NoParameters> {
   final BaseAuthRepository baseAuthRepository;
 
   FacebookUseCase(this.baseAuthRepository);
   @override
-  Future<Either<Failure, User>> call(NoParameters parameters) => baseAuthRepository.facebook();
+  Future<Either<Failure, AuthCredential>> call(NoParameters parameters) => baseAuthRepository.facebook();
 }

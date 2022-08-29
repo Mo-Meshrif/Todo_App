@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '/app/services/network_services.dart';
 import '../../../../app/errors/exception.dart';
 import '../../../../app/errors/failure.dart';
@@ -18,7 +19,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   );
 
   @override
-  Future<Either<Failure, User>> signIn(LoginInputs userInputs) async {
+  Future<Either<Failure, AuthUser>> signIn(LoginInputs userInputs) async {
     if (await networkServices.isConnected()) {
       try {
         final user = await baseAuthRemoteDataSource.signIn(userInputs);
@@ -32,7 +33,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signUp(SignUpInputs userInputs) async {
+  Future<Either<Failure, AuthUser>> signUp(SignUpInputs userInputs) async {
     if (await networkServices.isConnected()) {
       try {
         final user = await baseAuthRemoteDataSource.signUp(userInputs);
@@ -60,7 +61,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> facebook() async {
+  Future<Either<Failure, AuthCredential>> facebook() async {
     if (await networkServices.isConnected()) {
       try {
         final user = await baseAuthRemoteDataSource.facebook();
@@ -74,7 +75,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> twitter() async {
+  Future<Either<Failure, AuthCredential>> twitter() async {
     if (await networkServices.isConnected()) {
       try {
         final user = await baseAuthRemoteDataSource.twitter();
@@ -88,7 +89,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> google() async {
+  Future<Either<Failure, AuthCredential>> google() async {
     if (await networkServices.isConnected()) {
       try {
         final user = await baseAuthRemoteDataSource.google();
@@ -111,6 +112,18 @@ class AuthRepositoryImpl implements BaseAuthRepository {
       }
     } else {
       return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthUser>> signInWithCredential(
+      AuthCredential authCredential) async {
+    try {
+      final user =
+          await baseAuthRemoteDataSource.signInWithCredential(authCredential);
+      return Right(user);
+    } on ServerExecption catch (failure) {
+      return Left(ServerFailure(msg: failure.msg));
     }
   }
 }

@@ -1,6 +1,6 @@
 import '/modules/auth/domain/entities/user.dart';
 
-class UserModel extends User {
+class UserModel extends AuthUser {
   const UserModel({
     required String id,
     required String name,

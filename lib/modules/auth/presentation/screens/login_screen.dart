@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:todo/main.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../widgets/custom_elevated_loading.dart';
 import '/app/services/services_locator.dart';
@@ -32,6 +31,7 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         body: BlocConsumer<AuthBloc, AuthState>(
           listener: (ctx, state) {
+            //TODO refactor AuthStates
             if (state is AuthSuccess) {
               sl<AppShared>().setVal(AppConstants.passLoginKey, true);
               sl<AppShared>().setVal(AppConstants.userKey, state.user);
@@ -46,17 +46,19 @@ class LoginScreen extends StatelessWidget {
                 AppStrings.checkEmail,
               );
             } else if (state is AuthFailure) {
-              if (isDialogShowing) {
-                isDialogShowing = false;
-                Navigator.of(ctx).pop();
-              }
               if (state.msg.isNotEmpty) {
                 HelperFunctions.showSnackBar(context, state.msg);
               }
             } else if (state is AuthPopUpLoading) {
-              Navigator.of(ctx).pop();
-              isDialogShowing = true;
               HelperFunctions.showPopUpLoading(context);
+            } else if (state is AuthPopUpFailure) {
+              Navigator.of(ctx).pop();
+              if (state.msg.isNotEmpty) {
+                HelperFunctions.showSnackBar(context, state.msg);
+              }
+            } else if (state is AuthSocialPass) {
+              ctx.read<AuthBloc>().add(SignInWithCredentialEvent(
+                  authCredential: state.authCredential));
             }
           },
           builder: (context, state) => Form(
@@ -122,30 +124,36 @@ class LoginScreen extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
+                          final GlobalKey<FormState> _forgetKey =
+                              GlobalKey<FormState>();
                           HelperFunctions.showAlert(
                             context: context,
                             title: AppStrings.forgetPassword,
-                            content: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: AppPadding.p5,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: ColorManager.border),
-                              ),
-                              child: CustomTextFormField(
-                                controller: _forgetPassController,
-                                iconName: IconAssets.user,
-                                hintText: AppStrings.email,
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return AppStrings.enterEmail;
-                                  } else if (!HelperFunctions.isEmailValid(
-                                      val.toString())) {
-                                    return AppStrings.notVaildEmail;
-                                  } else {
-                                    return null;
-                                  }
-                                },
+                            content: Form(
+                              key: _forgetKey,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: AppPadding.p10,
+                                ),
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: ColorManager.border),
+                                ),
+                                child: CustomTextFormField(
+                                  controller: _forgetPassController,
+                                  iconName: IconAssets.user,
+                                  hintText: AppStrings.email,
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return AppStrings.enterEmail;
+                                    } else if (!HelperFunctions.isEmailValid(
+                                        val.toString())) {
+                                      return AppStrings.notVaildEmail;
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                             actions: [
@@ -159,11 +167,17 @@ class LoginScreen extends StatelessWidget {
                                 child: const Text(AppStrings.rest),
                                 style: TextButton.styleFrom(
                                     primary: ColorManager.primary),
-                                onPressed: () => context.read<AuthBloc>().add(
-                                      ForgetPasswordEvent(
-                                        email: _forgetPassController.text,
-                                      ),
-                                    ),
+                                onPressed: () {
+                                  if (_forgetKey.currentState!.validate()) {
+                                    _forgetKey.currentState!.save();
+                                    Navigator.of(context).pop();
+                                    context.read<AuthBloc>().add(
+                                          ForgetPasswordEvent(
+                                            email: _forgetPassController.text,
+                                          ),
+                                        );
+                                  }
+                                },
                               ),
                             ],
                           );
@@ -187,7 +201,7 @@ class LoginScreen extends StatelessWidget {
                                 context.read<AuthBloc>().add(
                                       LoginEvent(
                                         loginInputs: LoginInputs(
-                                          name: _emailController.text,
+                                          email: _emailController.text,
                                           password: _passwordController.text,
                                         ),
                                       ),

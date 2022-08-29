@@ -22,6 +22,11 @@ class ForgetPasswordEvent extends AuthEvent {
   const ForgetPasswordEvent({required this.email});
 }
 
+class SignInWithCredentialEvent extends AuthEvent {
+  final AuthCredential authCredential;
+  const SignInWithCredentialEvent({required this.authCredential});
+}
+
 class FacebookLoginEvent extends AuthEvent {}
 
 class TwitterLoginEvent extends AuthEvent {}

@@ -13,8 +13,13 @@ class AuthLoading extends AuthState {}
 
 class AuthPopUpLoading extends AuthState {}
 
+class AuthPopUpFailure extends AuthState {
+  final String msg;
+  const AuthPopUpFailure({required this.msg});
+}
+
 class AuthSuccess extends AuthState {
-  final User user;
+  final AuthUser user;
   const AuthSuccess({required this.user});
 }
 
@@ -26,4 +31,9 @@ class AuthRestSuccess extends AuthState {
 class AuthFailure extends AuthState {
   final String msg;
   const AuthFailure({required this.msg});
+}
+
+class AuthSocialPass extends AuthState {
+  final AuthCredential authCredential;
+  const AuthSocialPass({required this.authCredential});
 }

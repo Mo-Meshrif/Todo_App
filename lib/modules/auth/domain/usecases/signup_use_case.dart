@@ -5,12 +5,12 @@ import '../../../../app/usecase/base_use_case.dart';
 import '../entities/user.dart';
 import '../repositories/base_auth_repository.dart';
 
-class SignUpUseCase implements BaseUseCase<Either<Failure, User>, SignUpInputs> {
+class SignUpUseCase implements BaseUseCase<Either<Failure, AuthUser>, SignUpInputs> {
   final BaseAuthRepository baseAuthRepository;
   SignUpUseCase(this.baseAuthRepository);
 
   @override
-  Future<Either<Failure, User>> call(SignUpInputs parameters) =>
+  Future<Either<Failure, AuthUser>> call(SignUpInputs parameters) =>
       baseAuthRepository.signUp(parameters);
 }
 

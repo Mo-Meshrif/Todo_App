@@ -5,22 +5,23 @@ import '/modules/auth/domain/entities/user.dart';
 import '../repositories/base_auth_repository.dart';
 import '/app/usecase/base_use_case.dart';
 
-class LoginUseCase implements BaseUseCase<Either<Failure, User>, LoginInputs> {
+class LoginUseCase
+    implements BaseUseCase<Either<Failure, AuthUser>, LoginInputs> {
   final BaseAuthRepository baseAuthRepository;
   LoginUseCase(this.baseAuthRepository);
 
   @override
-  Future<Either<Failure, User>> call(LoginInputs parameters) =>
+  Future<Either<Failure, AuthUser>> call(LoginInputs parameters) =>
       baseAuthRepository.signIn(parameters);
 }
 
 class LoginInputs extends Equatable {
-  final String name, password;
+  final String email, password;
   const LoginInputs({
-    required this.name,
+    required this.email,
     required this.password,
   });
 
   @override
-  List<Object?> get props => [name, password];
+  List<Object?> get props => [email, password];
 }

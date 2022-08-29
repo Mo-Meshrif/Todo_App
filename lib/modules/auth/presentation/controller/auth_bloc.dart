@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
 import '/app/usecase/base_use_case.dart';
 import '/modules/auth/domain/entities/user.dart';
 import '/app/errors/failure.dart';
@@ -18,6 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase loginUseCase;
   final SignUpUseCase signUpUseCase;
   final ForgetPasswordUseCase forgetPasswordUseCase;
+  final SignInWithCredentialUseCase signInWithCredentialUseCase;
   final FacebookUseCase facebookUseCase;
   final TwitterUseCase twitterUseCase;
   final GoogleUseCase googleUseCase;
@@ -25,6 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.loginUseCase,
     required this.signUpUseCase,
     required this.forgetPasswordUseCase,
+    required this.signInWithCredentialUseCase,
     required this.facebookUseCase,
     required this.twitterUseCase,
     required this.googleUseCase,
@@ -32,6 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>(_login);
     on<SignUpEvent>(_signUp);
     on<ForgetPasswordEvent>(_forgetPassword);
+    on<SignInWithCredentialEvent>(_signInWithCredential);
     on<FacebookLoginEvent>(_facebookLogin);
     on<TwitterLoginEvent>(_twitterLogin);
     on<GoogleLoginEvent>(_googleLogin);
@@ -39,7 +44,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _login(LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final Either<Failure, User> result = await loginUseCase(event.loginInputs);
+    final Either<Failure, dynamic> result =
+        await loginUseCase(event.loginInputs);
     result.fold(
       (failure) => emit(AuthFailure(msg: failure.msg)),
       (user) => emit(AuthSuccess(user: user)),
@@ -48,7 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _signUp(SignUpEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final Either<Failure, User> result =
+    final Either<Failure, AuthUser> result =
         await signUpUseCase(event.signUpInputs);
     result.fold(
       (failure) => emit(AuthFailure(msg: failure.msg)),
@@ -62,38 +68,49 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, bool> result =
         await forgetPasswordUseCase(event.email);
     result.fold(
-      (failure) => emit(AuthFailure(msg: failure.msg)),
+      (failure) => emit(AuthPopUpFailure(msg: failure.msg)),
       (isRested) => emit(AuthRestSuccess(isRested: isRested)),
+    );
+  }
+
+  FutureOr<void> _signInWithCredential(
+      SignInWithCredentialEvent event, Emitter<AuthState> emit) async {
+    emit(AuthPopUpLoading());
+    final Either<Failure, AuthUser> authResult =
+        await signInWithCredentialUseCase(event.authCredential);
+    authResult.fold(
+      (authFailure) => emit(AuthPopUpFailure(msg: authFailure.msg)),
+      (user) => emit(AuthSuccess(user: user)),
     );
   }
 
   FutureOr<void> _facebookLogin(
       FacebookLoginEvent event, Emitter<AuthState> emit) async {
-    final Either<Failure, User> result =
+    final Either<Failure, AuthCredential> result =
         await facebookUseCase(const NoParameters());
     result.fold(
       (failure) => emit(AuthFailure(msg: failure.msg)),
-      (user) => emit(AuthSuccess(user: user)),
+      (authCredential) => emit(AuthSocialPass(authCredential: authCredential)),
     );
   }
 
   FutureOr<void> _twitterLogin(
       TwitterLoginEvent event, Emitter<AuthState> emit) async {
-    final Either<Failure, User> result =
+    final Either<Failure, AuthCredential> result =
         await twitterUseCase(const NoParameters());
     result.fold(
       (failure) => emit(AuthFailure(msg: failure.msg)),
-      (user) => emit(AuthSuccess(user: user)),
+      (authCredential) => emit(AuthSocialPass(authCredential: authCredential)),
     );
   }
 
   FutureOr<void> _googleLogin(
       GoogleLoginEvent event, Emitter<AuthState> emit) async {
-    final Either<Failure, User> result =
+    final Either<Failure, AuthCredential> result =
         await googleUseCase(const NoParameters());
     result.fold(
       (failure) => emit(AuthFailure(msg: failure.msg)),
-      (user) => emit(AuthSuccess(user: user)),
+      (authCredential) => emit(AuthSocialPass(authCredential: authCredential)),
     );
   }
 }
