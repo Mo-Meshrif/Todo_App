@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '/modules/auth/domain/usecases/signup_use_case.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../widgets/custom_elevated_loading.dart';
 import '/app/services/services_locator.dart';
@@ -222,17 +223,31 @@ class AuthScreen extends StatelessWidget {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                context.read<AuthBloc>().add(
-                                      LoginEvent(
-                                        loginInputs: LoginInputs(
-                                          email: _emailController.text,
-                                          password: _passwordController.text,
+                                if (isLogin) {
+                                  context.read<AuthBloc>().add(
+                                        LoginEvent(
+                                          loginInputs: LoginInputs(
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                          ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                } else {
+                                  context.read<AuthBloc>().add(
+                                        SignUpEvent(
+                                          signUpInputs: SignUpInputs(
+                                            name: _nameController.text,
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                          ),
+                                        ),
+                                      );
+                                }
                               }
                             },
-                            child:  Text(isLogin?AppStrings.loginButton:AppStrings.signUpButton),
+                            child: Text(isLogin
+                                ? AppStrings.loginButton
+                                : AppStrings.signUpButton),
                           ),
                   ),
                   SizedBox(height: AppSize.s48.h),
@@ -281,9 +296,15 @@ class AuthScreen extends StatelessWidget {
                   ),
                   SizedBox(height: AppSize.s80.h),
                   TextButton(
-                    onPressed: () => context
-                        .read<AuthBloc>()
-                        .add(AuthToggleEvent(prevState: isLogin)),
+                    onPressed: () {
+                      if (_formKey.currentState != null) {
+                        FocusScope.of(context).unfocus();
+                        _formKey.currentState!.reset();
+                      }
+                      context
+                          .read<AuthBloc>()
+                          .add(AuthToggleEvent(prevState: isLogin));
+                    },
                     child: RichText(
                       text: TextSpan(
                         style: const TextStyle(color: Colors.black),
