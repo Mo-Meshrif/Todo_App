@@ -44,9 +44,9 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
               email: userInputs.email, password: userInputs.password);
       final UserModel userModel = UserModel(
         id: userCredential.user!.uid,
-        name: userCredential.user!.displayName ?? '',
+        name: userCredential.user!.displayName ?? AppConstants.emptyVal,
         email: userInputs.email,
-        pic: userCredential.user!.photoURL ?? '',
+        pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
       );
       _uploadDataToFireStore(userModel);
       return userModel;
@@ -65,7 +65,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         id: userCredential.user!.uid,
         name: userInputs.name,
         email: userInputs.email,
-        pic: userCredential.user!.photoURL ?? '',
+        pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
       );
       _uploadDataToFireStore(userModel);
       return userModel;
@@ -94,7 +94,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
             FacebookAuthProvider.credential(accessToken);
         return faceCredential;
       } else if (loginResult.status == LoginStatus.cancelled) {
-        throw '';
+        throw ServerExecption(AppConstants.emptyVal);
       } else {
         throw ServerExecption(loginResult.message.toString());
       }
@@ -114,7 +114,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
                 secret: authResult.authTokenSecret!);
         return twitterCredential;
       } else if (authResult.status == TwitterLoginStatus.cancelledByUser) {
-        throw '';
+        throw ServerExecption(AppConstants.emptyVal);
       } else {
         throw ServerExecption(authResult.errorMessage!);
       }
@@ -136,7 +136,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
             accessToken: googleSignInAuthentication.accessToken);
         return googleCredential;
       } else {
-        throw ServerExecption('');
+        throw ServerExecption(AppConstants.emptyVal);
       }
     } catch (e) {
       throw ServerExecption(e.toString());
@@ -159,10 +159,16 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
           await firebaseAuth.signInWithCredential(authCredential);
       final User? user = userCredential.user;
       final UserModel userModel = UserModel(
-        id: user == null ? '' : user.uid,
-        name: user == null ? '' : user.displayName ?? '',
-        email: user == null ? '' : user.email ?? '',
-        pic: user == null ? '' : user.photoURL ?? '',
+        id: user == null ? AppConstants.emptyVal : user.uid,
+        name: user == null
+            ? AppConstants.emptyVal
+            : user.displayName ?? AppConstants.emptyVal,
+        email: user == null
+            ? AppConstants.emptyVal
+            : user.email ?? AppConstants.emptyVal,
+        pic: user == null
+            ? AppConstants.emptyVal
+            : user.photoURL ?? AppConstants.emptyVal,
       );
       _uploadDataToFireStore(userModel);
       return userModel;
@@ -199,10 +205,16 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
     if (userCredential != null) {
       final User? user = userCredential.user;
       final UserModel userModel = UserModel(
-        id: user == null ? '' : user.uid,
-        name: user == null ? '' : user.displayName ?? '',
-        email: user == null ? '' : user.email ?? '',
-        pic: user == null ? '' : user.photoURL ?? '',
+        id: user == null ? AppConstants.emptyVal : user.uid,
+        name: user == null
+            ? AppConstants.emptyVal
+            : user.displayName ?? AppConstants.emptyVal,
+        email: user == null
+            ? AppConstants.emptyVal
+            : user.email ?? AppConstants.emptyVal,
+        pic: user == null
+            ? AppConstants.emptyVal
+            : user.photoURL ?? AppConstants.emptyVal,
       );
       _uploadDataToFireStore(userModel);
       return userModel;

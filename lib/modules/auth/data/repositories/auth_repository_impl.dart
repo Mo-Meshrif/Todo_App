@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../app/utils/constants_manager.dart';
 import '/app/services/network_services.dart';
 import '../../../../app/errors/exception.dart';
 import '../../../../app/errors/failure.dart';
@@ -28,7 +29,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
         return Left(ServerFailure(msg: failure.msg));
       }
     } else {
-      return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
   }
 
@@ -42,7 +43,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
         return Left(ServerFailure(msg: failure.msg));
       }
     } else {
-      return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
   }
 
@@ -56,7 +57,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
         return Left(ServerFailure(msg: failure.msg));
       }
     } else {
-      return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
   }
 
@@ -70,7 +71,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
         return Left(ServerFailure(msg: failure.msg));
       }
     } else {
-      return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
   }
 
@@ -84,7 +85,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
         return Left(ServerFailure(msg: failure.msg));
       }
     } else {
-      return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
   }
 
@@ -98,7 +99,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
         return Left(ServerFailure(msg: failure.msg));
       }
     } else {
-      return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
   }
 
@@ -111,7 +112,7 @@ class AuthRepositoryImpl implements BaseAuthRepository {
         return Left(ServerFailure(msg: failure.msg));
       }
     } else {
-      return const Left(ServerFailure(msg: 'NO_INTERNET_CONNECTION'));
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
   }
 
