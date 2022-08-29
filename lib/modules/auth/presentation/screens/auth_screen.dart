@@ -112,7 +112,7 @@ class AuthScreen extends StatelessWidget {
                             ),
                             CustomTextFormField(
                               controller: _emailController,
-                              iconName: IconAssets.user,
+                              iconName: IconAssets.email,
                               hintText: AppStrings.email,
                               validator: (val) {
                                 if (val!.isEmpty) {
@@ -165,7 +165,7 @@ class AuthScreen extends StatelessWidget {
                                   ),
                                   child: CustomTextFormField(
                                     controller: _forgetPassController,
-                                    iconName: IconAssets.user,
+                                    iconName: IconAssets.email,
                                     hintText: AppStrings.email,
                                     validator: (val) {
                                       if (val!.isEmpty) {
