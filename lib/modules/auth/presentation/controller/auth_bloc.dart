@@ -68,7 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, bool> result =
         await forgetPasswordUseCase(event.email);
     result.fold(
-      (failure) => emit(AuthPopUpFailure(msg: failure.msg)),
+      (failure) => emit(AuthFailure(isPopup: true, msg: failure.msg)),
       (isRested) => emit(AuthRestSuccess(isRested: isRested)),
     );
   }
@@ -79,7 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final Either<Failure, AuthUser> authResult =
         await signInWithCredentialUseCase(event.authCredential);
     authResult.fold(
-      (authFailure) => emit(AuthPopUpFailure(msg: authFailure.msg)),
+      (failure) => emit(AuthFailure(isPopup: true, msg: failure.msg)),
       (user) => emit(AuthSuccess(user: user)),
     );
   }

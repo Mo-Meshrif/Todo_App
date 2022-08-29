@@ -31,8 +31,9 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         body: BlocConsumer<AuthBloc, AuthState>(
           listener: (ctx, state) {
-            //TODO refactor AuthStates
-            if (state is AuthSuccess) {
+            if (state is AuthPopUpLoading) {
+              HelperFunctions.showPopUpLoading(context);
+            } else if (state is AuthSuccess) {
               sl<AppShared>().setVal(AppConstants.passLoginKey, true);
               sl<AppShared>().setVal(AppConstants.userKey, state.user);
               Navigator.of(ctx).pushReplacementNamed(Routes.homeRoute);
@@ -46,13 +47,9 @@ class LoginScreen extends StatelessWidget {
                 AppStrings.checkEmail,
               );
             } else if (state is AuthFailure) {
-              if (state.msg.isNotEmpty) {
-                HelperFunctions.showSnackBar(context, state.msg);
+              if (state.isPopup) {
+                Navigator.of(ctx).pop();
               }
-            } else if (state is AuthPopUpLoading) {
-              HelperFunctions.showPopUpLoading(context);
-            } else if (state is AuthPopUpFailure) {
-              Navigator.of(ctx).pop();
               if (state.msg.isNotEmpty) {
                 HelperFunctions.showSnackBar(context, state.msg);
               }
