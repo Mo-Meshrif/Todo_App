@@ -44,6 +44,11 @@
 		<key>FacebookClientToken</key>
 		<string>8e81619ce8b2b6a5701eabcc376f8f96</string>
 		<!-- End of the Social Section -->
+		<key>CFBundleLocalizations</key>
+		<array>
+			<string>en</string>
+			<string>ar</string>
+		</array>
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
