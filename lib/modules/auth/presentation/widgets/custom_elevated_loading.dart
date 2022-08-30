@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
@@ -24,9 +25,9 @@ class CustomElevatedLoading extends StatelessWidget {
           const SizedBox(
             width: AppSize.s20,
           ),
-          const Text(
-            AppStrings.loading,
-            style: TextStyle(fontSize: AppSize.s20),
+           Text(
+            AppStrings.loading.tr(),
+            style: const TextStyle(fontSize: AppSize.s20),
           )
         ],
       ),
