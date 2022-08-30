@@ -17,7 +17,7 @@ class AppStrings {
   static const enterEmail = 'Enter your email,please !';
   static const notVaildEmail = 'Your email not valid !';
   static const enterPassword = 'Enter your password,please !';
-  static const notVaildPassword = 'Password must be more than 8';
+  static const notVaildPassword = 'Password must be at least 8';
   static const cancel = 'Cancel';
   static const rest = 'Rest';
   static const checkEmail = 'Check your account inbox or spam !';
