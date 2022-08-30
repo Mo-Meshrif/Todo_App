@@ -104,6 +104,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _facebookLogin(
       FacebookLoginEvent event, Emitter<AuthState> emit) async {
+    emit(AuthTranstion());
     final Either<Failure, AuthCredential> result =
         await facebookUseCase(const NoParameters());
     result.fold(
@@ -114,6 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _twitterLogin(
       TwitterLoginEvent event, Emitter<AuthState> emit) async {
+    emit(AuthTranstion());
     final Either<Failure, AuthCredential> result =
         await twitterUseCase(const NoParameters());
     result.fold(
@@ -124,6 +126,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _googleLogin(
       GoogleLoginEvent event, Emitter<AuthState> emit) async {
+    emit(AuthTranstion());
     final Either<Failure, AuthCredential> result =
         await googleUseCase(const NoParameters());
     result.fold(
