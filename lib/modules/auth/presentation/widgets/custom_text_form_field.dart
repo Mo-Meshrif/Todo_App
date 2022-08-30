@@ -49,6 +49,7 @@ class CustomTextFormField extends StatelessWidget {
                       Visibility(
                         visible: isPassword,
                         child: IconButton(
+                          splashRadius: AppSize.s20,
                           onPressed: () => innerState(
                             () {
                               isPassObscure = !isPassObscure;
