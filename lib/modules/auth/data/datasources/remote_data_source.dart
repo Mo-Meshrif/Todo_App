@@ -88,16 +88,10 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   Future<AuthCredential> facebook() async {
     try {
       final LoginResult loginResult = await facebookAuth.login();
-      if (loginResult.status == LoginStatus.success) {
-        final String accessToken = loginResult.accessToken!.token;
-        final OAuthCredential faceCredential =
-            FacebookAuthProvider.credential(accessToken);
-        return faceCredential;
-      } else if (loginResult.status == LoginStatus.cancelled) {
-        throw ServerExecption(AppConstants.emptyVal);
-      } else {
-        throw ServerExecption(loginResult.message.toString());
-      }
+      final String accessToken = loginResult.accessToken!.token;
+      final OAuthCredential faceCredential =
+          FacebookAuthProvider.credential(accessToken);
+      return faceCredential;
     } catch (e) {
       throw ServerExecption(e.toString());
     }
@@ -107,17 +101,10 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   Future<AuthCredential> twitter() async {
     try {
       final AuthResult authResult = await twitterLogin.login();
-      if (authResult.status == TwitterLoginStatus.loggedIn) {
-        final OAuthCredential twitterCredential =
-            TwitterAuthProvider.credential(
-                accessToken: authResult.authToken!,
-                secret: authResult.authTokenSecret!);
-        return twitterCredential;
-      } else if (authResult.status == TwitterLoginStatus.cancelledByUser) {
-        throw ServerExecption(AppConstants.emptyVal);
-      } else {
-        throw ServerExecption(authResult.errorMessage!);
-      }
+      final OAuthCredential twitterCredential = TwitterAuthProvider.credential(
+          accessToken: authResult.authToken!,
+          secret: authResult.authTokenSecret!);
+      return twitterCredential;
     } catch (e) {
       throw ServerExecption(e.toString());
     }
@@ -136,7 +123,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
             accessToken: googleSignInAuthentication.accessToken);
         return googleCredential;
       } else {
-        throw ServerExecption(AppConstants.emptyVal);
+        throw ServerExecption(AppConstants.nullError);
       }
     } catch (e) {
       throw ServerExecption(e.toString());
@@ -185,7 +172,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
     final QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await firebaseFirestore
             .collection(AppConstants.usersCollection)
-            .where('id', isEqualTo: userModel.id)
+            .where(AppConstants.userIdFeild, isEqualTo: userModel.id)
             .get();
     if (querySnapshot.docs.isNotEmpty) {
       firebaseFirestore

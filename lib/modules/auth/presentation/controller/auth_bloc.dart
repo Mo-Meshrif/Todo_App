@@ -47,7 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _toggle(AuthToggleEvent event, Emitter<AuthState> emit) {
     emit(AuthTranstion());
-    emit(AuthChanged(currentState:!event.prevState ));
+    emit(AuthChanged(currentState: !event.prevState));
   }
 
   FutureOr<void> _login(LoginEvent event, Emitter<AuthState> emit) async {
@@ -147,7 +147,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return AppStrings.opNotAllowed;
     } else if (msg == AppConstants.noConnection) {
       return AppStrings.noConnection;
-    } else if (msg == AppConstants.emptyVal) {
+    } else if (msg.contains(AppConstants.nullError)) {
       return AppConstants.emptyVal;
     } else {
       return AppStrings.operationFailed;
