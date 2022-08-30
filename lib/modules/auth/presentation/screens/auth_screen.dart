@@ -67,6 +67,7 @@ class AuthScreen extends StatelessWidget {
           },
           builder: (context, state) => SafeArea(
             child: Stack(
+              alignment: AlignmentDirectional.topEnd,
               children: [
                 Form(
                   key: _formKey,
