@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../components/auth_inputs.dart';
+import '../components/forget_password.dart';
+import '../components/login_button.dart';
+import '../components/social_login.dart';
+import '../components/toggle_auth.dart';
+import '../widgets/custom_or_divider.dart';
 import '/modules/auth/domain/usecases/signup_use_case.dart';
 import '../../../../app/helper/helper_functions.dart';
-import '../widgets/custom_elevated_loading.dart';
 import '/app/services/services_locator.dart';
 import '/app/utils/constants_manager.dart';
 import '/modules/auth/domain/usecases/login_use_case.dart';
 import '../../../../app/helper/shared_helper.dart';
 import '../../../../app/utils/routes_manager.dart';
 import '/modules/auth/presentation/controller/auth_bloc.dart';
-import '/app/utils/color_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
 import '../../../../app/utils/values_manager.dart';
-import '../widgets/custom_social_button.dart';
-import '../widgets/custom_text_form_field.dart';
 import '/app/utils/assets_manager.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -83,262 +85,72 @@ class AuthScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppPadding.p10,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: ColorManager.border),
-                          ),
-                          child: Column(
-                            children: [
-                              Visibility(
-                                visible: !isLogin,
-                                child: Column(
-                                  children: [
-                                    CustomTextFormField(
-                                      controller: _nameController,
-                                      iconName: IconAssets.user,
-                                      hintText: AppStrings.userName.tr(),
-                                      textInputAction: TextInputAction.next,
-                                      validator: (val) {
-                                        if (val!.isEmpty) {
-                                          return AppStrings.enterName.tr();
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                    ),
-                                    Divider(color: ColorManager.border),
-                                  ],
-                                ),
-                              ),
-                              CustomTextFormField(
-                                controller: _emailController,
-                                iconName: IconAssets.email,
-                                hintText: AppStrings.email.tr(),
-                                textInputAction: TextInputAction.next,
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return AppStrings.enterEmail.tr();
-                                  } else if (!HelperFunctions.isEmailValid(
-                                      val.toString())) {
-                                    return AppStrings.notVaildEmail.tr();
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              Divider(color: ColorManager.border),
-                              CustomTextFormField(
-                                controller: _passwordController,
-                                iconName: IconAssets.password,
-                                hintText: AppStrings.password.tr(),
-                                textInputAction: TextInputAction.done,
-                                isPassword: true,
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return AppStrings.enterPassword.tr();
-                                  } else if (val.length < 8) {
-                                    return AppStrings.notVaildPassword.tr();
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
+                        AuthInputs(
+                          isLogin: isLogin,
+                          nameController: _nameController,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
                         ),
                         Visibility(
                           visible: isLogin,
-                          child: TextButton(
-                            onPressed: () {
-                              final GlobalKey<FormState> _forgetKey =
-                                  GlobalKey<FormState>();
-                              HelperFunctions.showAlert(
-                                context: context,
-                                title: AppStrings.forgetPassword.tr(),
-                                content: Form(
-                                  key: _forgetKey,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: AppPadding.p10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: ColorManager.border),
-                                    ),
-                                    child: CustomTextFormField(
-                                      controller: _forgetPassController,
-                                      iconName: IconAssets.email,
-                                      hintText: AppStrings.email.tr(),
-                                      textInputAction: TextInputAction.done,
-                                      validator: (val) {
-                                        if (val!.isEmpty) {
-                                          return AppStrings.enterEmail.tr();
-                                        } else if (!HelperFunctions
-                                            .isEmailValid(val.toString())) {
-                                          return AppStrings.notVaildEmail.tr();
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                    ),
+                          child: ForgetPassword(
+                            forgetPassController: _forgetPassController,
+                            restFun: () => context.read<AuthBloc>().add(
+                                  ForgetPasswordEvent(
+                                    email: _forgetPassController.text,
                                   ),
                                 ),
-                                actions: [
-                                  TextButton(
-                                    child: Text(AppStrings.cancel.tr()),
-                                    style: TextButton.styleFrom(
-                                        primary: ColorManager.primary),
-                                    onPressed: () => Navigator.pop(context),
-                                  ),
-                                  TextButton(
-                                    child: Text(AppStrings.rest.tr()),
-                                    style: TextButton.styleFrom(
-                                        primary: ColorManager.primary),
-                                    onPressed: () {
-                                      if (_forgetKey.currentState!.validate()) {
-                                        _forgetKey.currentState!.save();
-                                        Navigator.of(context).pop();
-                                        context.read<AuthBloc>().add(
-                                              ForgetPasswordEvent(
-                                                email:
-                                                    _forgetPassController.text,
-                                              ),
-                                            );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                            style: TextButton.styleFrom(
-                                primary: ColorManager.border),
-                            child: Text(AppStrings.forgetPassword.tr()),
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: AppSize.s36.h),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: AppSize.s144.h,
-                      child: state is AuthLoading
-                          ? const CustomElevatedLoading()
-                          : ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  if (isLogin) {
-                                    context.read<AuthBloc>().add(
-                                          LoginEvent(
-                                            loginInputs: LoginInputs(
-                                              email: _emailController.text,
-                                              password:
-                                                  _passwordController.text,
-                                            ),
-                                          ),
-                                        );
-                                  } else {
-                                    context.read<AuthBloc>().add(
-                                          SignUpEvent(
-                                            signUpInputs: SignUpInputs(
-                                              name: _nameController.text,
-                                              email: _emailController.text,
-                                              password:
-                                                  _passwordController.text,
-                                            ),
-                                          ),
-                                        );
-                                  }
-                                }
-                              },
-                              child: Text(
-                                isLogin
-                                    ? AppStrings.loginButton.tr()
-                                    : AppStrings.signUpButton.tr(),
+                    AuthButton(
+                      isLoading: state is AuthLoading,
+                      isLogin: isLogin,
+                      authKey: _formKey,
+                      loginFun: () => context.read<AuthBloc>().add(
+                            LoginEvent(
+                              loginInputs: LoginInputs(
+                                email: _emailController.text,
+                                password: _passwordController.text,
                               ),
                             ),
+                          ),
+                      signUpFun: () => context.read<AuthBloc>().add(
+                            SignUpEvent(
+                              signUpInputs: SignUpInputs(
+                                name: _nameController.text,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            ),
+                          ),
                     ),
                     SizedBox(height: AppSize.s48.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: ColorManager.border,
-                            height: AppSize.s36,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppPadding.p10),
-                          child: Text(AppStrings.or.tr()),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: ColorManager.border,
-                            height: AppSize.s36,
-                          ),
-                        ),
-                      ],
-                    ),
+                    const CustomOrDivider(),
                     Text(AppStrings.loginUsingSm.tr()),
                     SizedBox(height: AppSize.s48.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomSocialButton(
-                          iconName: IconAssets.facebook,
-                          onPress: () => context
-                              .read<AuthBloc>()
-                              .add(FacebookLoginEvent()),
-                        ),
-                        CustomSocialButton(
-                          iconName: IconAssets.twitter,
-                          onPress: () =>
-                              context.read<AuthBloc>().add(TwitterLoginEvent()),
-                        ),
-                        CustomSocialButton(
-                          iconName: IconAssets.google,
-                          onPress: () =>
-                              context.read<AuthBloc>().add(GoogleLoginEvent()),
-                        ),
-                      ],
+                    SocialLogin(
+                      facebookFun: () =>
+                          context.read<AuthBloc>().add(FacebookLoginEvent()),
+                      twitterFun: () =>
+                          context.read<AuthBloc>().add(TwitterLoginEvent()),
+                      googleFun: () =>
+                          context.read<AuthBloc>().add(GoogleLoginEvent()),
                     ),
                     SizedBox(height: AppSize.s48.h),
-                    TextButton(
-                      onPressed: () {
+                    ToggleAuth(
+                      isLogin: isLogin,
+                      toggleFun: () {
                         if (_formKey.currentState != null) {
                           FocusScope.of(context).unfocus();
                           _formKey.currentState!.reset();
                         }
-                        context
-                            .read<AuthBloc>()
-                            .add(AuthToggleEvent(prevState: isLogin));
+                        context.read<AuthBloc>().add(
+                              AuthToggleEvent(prevState: isLogin),
+                            );
                       },
-                      child: RichText(
-                        text: TextSpan(
-                          style: const TextStyle(color: Colors.black),
-                          children: [
-                            TextSpan(
-                              text: isLogin
-                                  ? AppStrings.noAccount.tr()
-                                  : AppStrings.haveAccount.tr(),
-                            ),
-                            const WidgetSpan(
-                                child: SizedBox(
-                              width: AppSize.s5,
-                            )),
-                            TextSpan(
-                              text: isLogin
-                                  ? AppStrings.signUp.tr()
-                                  : AppStrings.login.tr(),
-                              style: TextStyle(color: ColorManager.primary),
-                            ),
-                          ],
-                        ),
-                      ),
                     )
                   ],
                 ),
