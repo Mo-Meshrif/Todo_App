@@ -30,4 +30,15 @@ class AppStrings {
       'Too many requests to log into this account,try later.';
   static const noConnection = 'No internet connection !';
   static const operationFailed = 'Operation failed,please try again.';
+  static const searchTask = 'Search Task';
+  static const daily = 'DAILY';
+  static const weekly = 'WEEKLY';
+  static const monthly = 'MONTHLY';
+  static const newTask = 'New Task';
+  static const important = 'Important';
+  static const done = 'Done';
+  static const later = 'Later';
+  static const category = 'Category';
+  static const settings = 'Settings';
+  static const logout = 'Logout';
 }

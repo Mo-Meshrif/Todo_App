@@ -1,5 +1,6 @@
 const String imagePath = "assets/images";
 const String iconPath = "assets/icons";
+const String jsonPath = "assets/json";
 
 class ImageAssets {
   static const String logo = "$imagePath/logo.svg";
@@ -27,4 +28,10 @@ class IconAssets {
   static const String user = "$iconPath/user.svg";
   static const String password = "$iconPath/password.svg";
   static const String email = "$iconPath/email.svg";
+  static const String appTitle = "$iconPath/appTitle.svg";
+}
+class JsonAssets {
+  static const String allDone = "$jsonPath/all-done.json";
+  static const String empty = "$jsonPath/empty.json";
+  static const String search = "$jsonPath/search.json";
 }

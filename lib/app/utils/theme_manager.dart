@@ -10,6 +10,7 @@ class ThemeManager {
       backgroundColor: ColorManager.background,
       // app bar theme
       appBarTheme: AppBarTheme(
+        elevation: 0,
         centerTitle: false,
         color: ColorManager.primary,
       ),

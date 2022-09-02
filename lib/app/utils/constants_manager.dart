@@ -27,4 +27,5 @@ class AppConstants {
   static const String userKey = 'userKey';
   static const String authPassKey = 'authPassKey';
   static const int durationInSec = 3;
+  static const int homeTabLength = 3;
 }
