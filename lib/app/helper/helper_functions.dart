@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'dart:math' as math;
 import '/app/utils/values_manager.dart';
 import '../utils/color_manager.dart';
 import '../utils/constants_manager.dart';
@@ -51,4 +53,13 @@ class HelperFunctions {
           ),
         ),
       );
+
+  //Rotate value
+  static double rotateVal(BuildContext context, {bool rotate = true}) {
+    if (rotate && context.locale == AppConstants.arabic) {
+      return math.pi;
+    } else {
+      return math.pi * 2;
+    }
+  }
 }
