@@ -28,4 +28,7 @@ class AppConstants {
   static const String authPassKey = 'authPassKey';
   static const int durationInSec = 3;
   static const int homeTabLength = 3;
+  static const double oneVal = 1.0;
+  static const double zeroVal = 0.0;
+  static const double twoVal = 2.0;
 }

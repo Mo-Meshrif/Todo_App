@@ -15,7 +15,8 @@ class IconAssets {
   static const String mark = "$iconPath/mark.svg";
   static const String alarm = "$iconPath/alarm.svg";
   static const String add = "$iconPath/add.svg";
-  static const String important = "$iconPath/important.svg";
+  static const String importantWhite = "$iconPath/white-important.svg";
+  static const String importantColor = "$iconPath/colored-important.svg";
   static const String done = "$iconPath/done.svg";
   static const String later = "$iconPath/later.svg";
   static const String category = "$iconPath/category.svg";
@@ -29,6 +30,7 @@ class IconAssets {
   static const String password = "$iconPath/password.svg";
   static const String email = "$iconPath/email.svg";
   static const String appTitle = "$iconPath/appTitle.svg";
+  static const String clipboard = "$iconPath/clipboard.svg";
 }
 class JsonAssets {
   static const String allDone = "$jsonPath/all-done.json";

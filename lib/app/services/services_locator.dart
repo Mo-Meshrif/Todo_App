@@ -5,6 +5,14 @@ import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
+import '../../modules/home/data/datasources/local_data_source.dart';
+import '../../modules/home/data/repositories/home_repository_impl.dart';
+import '../../modules/home/domain/repositories/base_home_repository.dart';
+import '../../modules/home/domain/usecases/add_task_use_case.dart';
+import '../../modules/home/domain/usecases/delete_task_use_case.dart';
+import '../../modules/home/domain/usecases/edit_task_use_case.dart';
+import '../../modules/home/domain/usecases/get_tasks_use_case.dart';
+import '../../modules/home/presentation/controller/home_bloc.dart';
 import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
 import '/modules/auth/presentation/controller/auth_bloc.dart';
 import '/app/services/network_services.dart';
@@ -53,9 +61,14 @@ class ServicesLocator {
     sl.registerLazySingleton<BaseAuthRemoteDataSource>(
       () => AuthRemoteDataSource(sl(), sl(), sl(), sl(), sl()),
     );
+    sl.registerLazySingleton<BaseHomeLocalDataSource>(
+      () => HomeLocalDataSource.db,
+    );
     //Repositories
     sl.registerLazySingleton<BaseAuthRepository>(
         () => AuthRepositoryImpl(sl(), sl()));
+    sl.registerLazySingleton<BaseHomeRespository>(
+        () => HomeRepositoryImpl(sl()));
     //UseCases
     sl.registerLazySingleton(() => LoginUseCase(sl()));
     sl.registerLazySingleton(() => SignUpUseCase(sl()));
@@ -64,6 +77,10 @@ class ServicesLocator {
     sl.registerLazySingleton(() => FacebookUseCase(sl()));
     sl.registerLazySingleton(() => TwitterUseCase(sl()));
     sl.registerLazySingleton(() => GoogleUseCase(sl()));
+    sl.registerLazySingleton(() => AddTaskUseCase(sl()));
+    sl.registerLazySingleton(() => GetTasksUseCase(sl()));
+    sl.registerLazySingleton(() => EditTaskUseCase(sl()));
+    sl.registerLazySingleton(() => DeleteTaskUseCase(sl()));
     //blocs
     sl.registerFactory(
       () => AuthBloc(
@@ -74,6 +91,14 @@ class ServicesLocator {
         facebookUseCase: sl(),
         twitterUseCase: sl(),
         googleUseCase: sl(),
+      ),
+    );
+    sl.registerLazySingleton(
+      () => HomeBloc(
+        addTaskUseCase: sl(),
+        getTasksUseCase: sl(),
+        editTaskUseCase: sl(),
+        deleteTaskUseCase: sl(),
       ),
     );
   }
