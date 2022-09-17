@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import '../../../../app/common/usecase/base_use_case.dart';
 import '../../../../app/errors/failure.dart';
 import '/modules/auth/domain/entities/user.dart';
 import '../repositories/base_auth_repository.dart';
-import '/app/usecase/base_use_case.dart';
 
 class LoginUseCase
     implements BaseUseCase<Either<Failure, AuthUser>, LoginInputs> {
