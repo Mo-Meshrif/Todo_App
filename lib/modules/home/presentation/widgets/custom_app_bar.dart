@@ -1,10 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/routes_manager.dart';
 import '../../../../app/utils/values_manager.dart';
+import '../controller/home_bloc.dart';
+import 'custom_add_edit_task.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -60,7 +64,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppPadding.p10),
             child: GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed(Routes.addTaskRoute),
+              onTap: () => showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(AppSize.s30.r),
+                    topRight: Radius.circular(AppSize.s30.r),
+                  ),
+                ),
+                builder: (context) => AddEditTaskWidget(
+                  addFun: (task) => context.read<HomeBloc>().add(
+                        AddTaskEvent(
+                          taskTodo: task,
+                        ),
+                      ),
+                ),
+              ),
               child: SvgPicture.asset(
                 IconAssets.add,
                 width: AppSize.s25,
@@ -73,5 +93,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(title == null ? AppSize.s70 : AppSize.s48);
+  Size get preferredSize =>
+      Size.fromHeight(title == null ? AppSize.s70 : AppSize.s48);
 }

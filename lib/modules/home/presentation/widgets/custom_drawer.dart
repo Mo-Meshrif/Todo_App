@@ -8,6 +8,7 @@ import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/routes_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
 import '../../../../app/utils/values_manager.dart';
+import '../../../auth/domain/entities/user.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -16,15 +17,8 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> pageList = [
       {
-        'title': AppStrings.newTask,
-        'icon': IconAssets.add,
-        'size': AppSize.s25,
-        'rotate': false,
-        'onTap': () => Navigator.of(context).pushNamed(Routes.addTaskRoute),
-      },
-      {
         'title': AppStrings.important,
-        'icon': IconAssets.important,
+        'icon': IconAssets.importantWhite,
         'size': AppSize.s25,
         'rotate': false,
         'onTap': () => Navigator.of(context).pushNamed(Routes.importantRoute),
@@ -42,13 +36,6 @@ class CustomDrawer extends StatelessWidget {
         'size': AppSize.s25,
         'rotate': false,
         'onTap': () => Navigator.of(context).pushNamed(Routes.laterRoute),
-      },
-      {
-        'title': AppStrings.category,
-        'icon': IconAssets.category,
-        'size': AppSize.s25,
-        'rotate': true,
-        'onTap': () => Navigator.of(context).pushNamed(Routes.categoryRoute),
       },
       {
         'title': AppStrings.settings,
@@ -71,37 +58,37 @@ class CustomDrawer extends StatelessWidget {
       height: ScreenUtil().screenHeight,
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            height: AppSize.s390.h,
-            color: ColorManager.primary,
-            padding: const EdgeInsets.fromLTRB(
-              0,
-              AppPadding.p5,
-              0,
-              AppPadding.p5,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundColor: ColorManager.primaryLight,
-                  radius: AppSize.s110.r,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: AppSize.s100.r,
+          Builder(builder: (context) {
+            AuthUser user = HelperFunctions.getSavedUser();
+            return Container(
+              width: double.infinity,
+              height: AppSize.s390.h,
+              color: ColorManager.primary,
+              padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: ColorManager.primaryLight,
+                    radius: AppSize.s110.r,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: AppSize.s100.r,
+                      backgroundImage:
+                          user.pic != null ? NetworkImage(user.pic!) : null,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: AppSize.s10.h,
-                ),
-                const Text(
-                  'Someone',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
+                  SizedBox(
+                    height: AppSize.s10.h,
+                  ),
+                  Text(
+                    user.name,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            );
+          }),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),

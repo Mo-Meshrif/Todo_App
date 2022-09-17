@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
+import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
 
@@ -28,7 +28,7 @@ class CustomTextSearch extends StatelessWidget {
             suffixIconConstraints: BoxConstraints(maxWidth: 155.w),
             suffixIcon: Transform(
               alignment: Alignment.center,
-              transform: Matrix4.rotationY(math.pi),
+              transform: Matrix4.rotationY(HelperFunctions.rotateVal(context)),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: SvgPicture.asset(IconAssets.search),
