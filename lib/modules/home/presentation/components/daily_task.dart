@@ -1,12 +1,114 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+import 'package:intl/intl.dart' as format;
+import '../../../../app/helper/helper_functions.dart';
+import '../../../../app/utils/assets_manager.dart';
+import '../../../../app/utils/color_manager.dart';
+import '../../../../app/utils/strings_manager.dart';
+import '../../../../app/utils/values_manager.dart';
+import '../controller/home_bloc.dart';
+import '../widgets/custom_task_list.dart';
 
 class DailyTask extends StatelessWidget {
   const DailyTask({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('DAILY-TASK'),
+    return BlocConsumer<HomeBloc, HomeState>(
+      listener: (ctx, state) {
+        if (state is AddTaskLoaded ||
+            state is EditTaskLoaded ||
+            state is DeleteTaskLLoaded) {
+          BlocProvider.of<HomeBloc>(ctx).add(GetDailyTasksEvent());
+        }
+      },
+      buildWhen: (previous, current) =>
+          current is DailyTaskLoaded || current is DailyTaskLoading,
+      builder: (context, state) => state is DailyTaskLoaded
+          ? state.dailyList.isNotEmpty
+              ? ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(AppPadding.p15),
+                      color: ColorManager.background,
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppPadding.p15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  '${HelperFunctions.welcome().tr()} ${HelperFunctions.lastUserName()}'),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppStrings.today,
+                                    style: TextStyle(
+                                      color: ColorManager.primary,
+                                    ),
+                                  ).tr(),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        AppStrings.completed,
+                                        style: TextStyle(
+                                          color: ColorManager.kGreen,
+                                        ),
+                                      ).tr(),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                              color: ColorManager.kGreen),
+                                          children: [
+                                            TextSpan(
+                                              text: HelperFunctions
+                                                      .doneTasksLength(
+                                                    context,
+                                                    state.dailyList,
+                                                  ) +
+                                                  '/',
+                                            ),
+                                            TextSpan(
+                                              text: HelperFunctions
+                                                  .getlocaleNumber(
+                                                context,
+                                                state.dailyList.length,
+                                              ),
+                                              style: TextStyle(
+                                                color: ColorManager.kRed,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Text(
+                                format.DateFormat('d-M-yyyy').format(
+                                  DateTime.now(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    CustomTaskList(
+                      taskList: state.dailyList,
+                    ),
+                  ],
+                )
+              : Lottie.asset(JsonAssets.allDone)
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }
