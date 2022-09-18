@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../app/common/usecase/base_use_case.dart';
 import '../../../../app/utils/constants_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
+import '../../domain/usecases/logout_use_case.dart';
 import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
 import '/modules/auth/domain/entities/user.dart';
 import '/app/errors/failure.dart';
@@ -26,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FacebookUseCase facebookUseCase;
   final TwitterUseCase twitterUseCase;
   final GoogleUseCase googleUseCase;
+  final LogoutUseCase logoutUseCase;
   AuthBloc({
     required this.loginUseCase,
     required this.signUpUseCase,
@@ -34,6 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.facebookUseCase,
     required this.twitterUseCase,
     required this.googleUseCase,
+    required this.logoutUseCase,
   }) : super(AuthInitial()) {
     on<AuthToggleEvent>(_toggle);
     on<LoginEvent>(_login);
@@ -43,6 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<FacebookLoginEvent>(_facebookLogin);
     on<TwitterLoginEvent>(_twitterLogin);
     on<GoogleLoginEvent>(_googleLogin);
+    on<LogoutEvent>(_logout);
   }
 
   FutureOr<void> _toggle(AuthToggleEvent event, Emitter<AuthState> emit) {
@@ -132,6 +136,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (authCredential) => emit(AuthSocialPass(authCredential: authCredential)),
+    );
+  }
+
+  FutureOr<void> _logout(LogoutEvent event, Emitter<AuthState> emit) async {
+    emit(AuthPopUpLoading());
+    final Either<Failure, dynamic> result =
+        await logoutUseCase(const NoParameters());
+    result.fold(
+      (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
+      (_) => emit(const AuthLogoutSuccess()),
     );
   }
 

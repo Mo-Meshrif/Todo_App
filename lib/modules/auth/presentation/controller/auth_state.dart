@@ -10,6 +10,7 @@ abstract class AuthState extends Equatable {
 class AuthInitial extends AuthState {}
 
 class AuthTranstion extends AuthState {}
+
 class AuthChanged extends AuthState {
   final bool currentState;
 
@@ -42,4 +43,8 @@ class AuthFailure extends AuthState {
 class AuthSocialPass extends AuthState {
   final AuthCredential authCredential;
   const AuthSocialPass({required this.authCredential});
+}
+
+class AuthLogoutSuccess extends AuthState {
+  const AuthLogoutSuccess();
 }

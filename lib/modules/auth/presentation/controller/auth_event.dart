@@ -11,6 +11,7 @@ class AuthToggleEvent extends AuthEvent {
   final bool prevState;
   const AuthToggleEvent({required this.prevState});
 }
+
 class LoginEvent extends AuthEvent {
   final LoginInputs loginInputs;
   const LoginEvent({required this.loginInputs});
@@ -36,3 +37,7 @@ class FacebookLoginEvent extends AuthEvent {}
 class TwitterLoginEvent extends AuthEvent {}
 
 class GoogleLoginEvent extends AuthEvent {}
+
+class LogoutEvent extends AuthEvent {
+  const LogoutEvent();
+}
