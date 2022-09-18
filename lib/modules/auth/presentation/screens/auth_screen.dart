@@ -32,128 +32,125 @@ class AuthScreen extends StatelessWidget {
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _passwordController = TextEditingController();
     final TextEditingController _forgetPassController = TextEditingController();
-    return BlocProvider(
-      create: (_) => sl<AuthBloc>(),
-      child: Scaffold(
-        body: BlocConsumer<AuthBloc, AuthState>(
-          listener: (ctx, state) {
-            if (state is AuthPopUpLoading) {
-              HelperFunctions.showPopUpLoading(context);
-            } else if (state is AuthSuccess) {
-              sl<AppShared>().setVal(AppConstants.authPassKey, true);
-              sl<AppShared>().setVal(AppConstants.userKey, state.user);
-              Navigator.of(ctx).pushReplacementNamed(Routes.homeRoute);
-              _emailController.clear();
-              _passwordController.clear();
-            } else if (state is AuthRestSuccess) {
+    return Scaffold(
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (ctx, state) {
+          if (state is AuthPopUpLoading) {
+            HelperFunctions.showPopUpLoading(context);
+          } else if (state is AuthSuccess) {
+            sl<AppShared>().setVal(AppConstants.authPassKey, true);
+            sl<AppShared>().setVal(AppConstants.userKey, state.user);
+            Navigator.of(ctx).pushReplacementNamed(Routes.homeRoute);
+            _emailController.clear();
+            _passwordController.clear();
+          } else if (state is AuthRestSuccess) {
+            Navigator.of(ctx).pop();
+            _forgetPassController.clear();
+            HelperFunctions.showSnackBar(
+              context,
+              AppStrings.checkEmail.tr(),
+            );
+          } else if (state is AuthFailure) {
+            if (state.isPopup) {
               Navigator.of(ctx).pop();
-              _forgetPassController.clear();
-              HelperFunctions.showSnackBar(
-                context,
-                AppStrings.checkEmail.tr(),
-              );
-            } else if (state is AuthFailure) {
-              if (state.isPopup) {
-                Navigator.of(ctx).pop();
-              }
-              if (state.msg.isNotEmpty) {
-                HelperFunctions.showSnackBar(context, state.msg.tr());
-              }
-            } else if (state is AuthSocialPass) {
-              ctx.read<AuthBloc>().add(SignInWithCredentialEvent(
-                  authCredential: state.authCredential));
-            } else if (state is AuthChanged) {
-              isLogin = state.currentState;
             }
-          },
-          builder: (context, state) => SafeArea(
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 144.w),
-                child: Column(
-                  children: [
-                    SizedBox(height: AppSize.s170.h),
-                    Center(
-                      child: SvgPicture.asset(
-                        ImageAssets.logo,
-                        height: AppSize.s189.h,
-                        width: AppSize.s295.w,
+            if (state.msg.isNotEmpty) {
+              HelperFunctions.showSnackBar(context, state.msg.tr());
+            }
+          } else if (state is AuthSocialPass) {
+            ctx.read<AuthBloc>().add(SignInWithCredentialEvent(
+                authCredential: state.authCredential));
+          } else if (state is AuthChanged) {
+            isLogin = state.currentState;
+          }
+        },
+        builder: (context, state) => SafeArea(
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 144.w),
+              child: Column(
+                children: [
+                  SizedBox(height: AppSize.s170.h),
+                  Center(
+                    child: SvgPicture.asset(
+                      ImageAssets.logo,
+                      height: AppSize.s189.h,
+                      width: AppSize.s295.w,
+                    ),
+                  ),
+                  SizedBox(height: AppSize.s120.h),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      AuthInputs(
+                        isLogin: isLogin,
+                        nameController: _nameController,
+                        emailController: _emailController,
+                        passwordController: _passwordController,
                       ),
-                    ),
-                    SizedBox(height: AppSize.s120.h),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        AuthInputs(
-                          isLogin: isLogin,
-                          nameController: _nameController,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                        ),
-                        Visibility(
-                          visible: isLogin,
-                          child: ForgetPassword(
-                            forgetPassController: _forgetPassController,
-                            restFun: () => context.read<AuthBloc>().add(
-                                  ForgetPasswordEvent(
-                                    email: _forgetPassController.text,
-                                  ),
+                      Visibility(
+                        visible: isLogin,
+                        child: ForgetPassword(
+                          forgetPassController: _forgetPassController,
+                          restFun: () => context.read<AuthBloc>().add(
+                                ForgetPasswordEvent(
+                                  email: _forgetPassController.text,
                                 ),
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: AppSize.s36.h),
+                  AuthButton(
+                    isLoading: state is AuthLoading,
+                    isLogin: isLogin,
+                    authKey: _formKey,
+                    loginFun: () => context.read<AuthBloc>().add(
+                          LoginEvent(
+                            loginInputs: LoginInputs(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: AppSize.s36.h),
-                    AuthButton(
-                      isLoading: state is AuthLoading,
-                      isLogin: isLogin,
-                      authKey: _formKey,
-                      loginFun: () => context.read<AuthBloc>().add(
-                            LoginEvent(
-                              loginInputs: LoginInputs(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              ),
+                    signUpFun: () => context.read<AuthBloc>().add(
+                          SignUpEvent(
+                            signUpInputs: SignUpInputs(
+                              name: _nameController.text,
+                              email: _emailController.text,
+                              password: _passwordController.text,
                             ),
                           ),
-                      signUpFun: () => context.read<AuthBloc>().add(
-                            SignUpEvent(
-                              signUpInputs: SignUpInputs(
-                                name: _nameController.text,
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              ),
-                            ),
-                          ),
-                    ),
-                    SizedBox(height: AppSize.s48.h),
-                    const CustomOrDivider(),
-                    Text(AppStrings.loginUsingSm.tr()),
-                    SizedBox(height: AppSize.s48.h),
-                    SocialLogin(
-                      facebookFun: () =>
-                          context.read<AuthBloc>().add(FacebookLoginEvent()),
-                      twitterFun: () =>
-                          context.read<AuthBloc>().add(TwitterLoginEvent()),
-                      googleFun: () =>
-                          context.read<AuthBloc>().add(GoogleLoginEvent()),
-                    ),
-                    SizedBox(height: AppSize.s48.h),
-                    ToggleAuth(
-                      isLogin: isLogin,
-                      toggleFun: () {
-                        if (_formKey.currentState != null) {
-                          FocusScope.of(context).unfocus();
-                          _formKey.currentState!.reset();
-                        }
-                        context.read<AuthBloc>().add(
-                              AuthToggleEvent(prevState: isLogin),
-                            );
-                      },
-                    )
-                  ],
-                ),
+                        ),
+                  ),
+                  SizedBox(height: AppSize.s48.h),
+                  const CustomOrDivider(),
+                  Text(AppStrings.loginUsingSm.tr()),
+                  SizedBox(height: AppSize.s48.h),
+                  SocialLogin(
+                    facebookFun: () =>
+                        context.read<AuthBloc>().add(FacebookLoginEvent()),
+                    twitterFun: () =>
+                        context.read<AuthBloc>().add(TwitterLoginEvent()),
+                    googleFun: () =>
+                        context.read<AuthBloc>().add(GoogleLoginEvent()),
+                  ),
+                  SizedBox(height: AppSize.s48.h),
+                  ToggleAuth(
+                    isLogin: isLogin,
+                    toggleFun: () {
+                      if (_formKey.currentState != null) {
+                        FocusScope.of(context).unfocus();
+                        _formKey.currentState!.reset();
+                      }
+                      context.read<AuthBloc>().add(
+                            AuthToggleEvent(prevState: isLogin),
+                          );
+                    },
+                  )
+                ],
               ),
             ),
           ),

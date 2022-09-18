@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todo/modules/home/presentation/controller/home_bloc.dart';
+import '../modules/auth/presentation/controller/auth_bloc.dart';
 import 'services/services_locator.dart';
 import 'utils/routes_manager.dart';
 import 'utils/strings_manager.dart';
@@ -20,20 +21,22 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) => ScreenUtilInit(
-      designSize: const Size(1080, 1920),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, _) => MultiBlocProvider(
-            providers: [
-              BlocProvider<HomeBloc>(create: (context) => sl()),
-            ],
-            child: MaterialApp(
-              title: AppStrings.appName,
-              theme: ThemeManager.lightTheme(),
-              onGenerateRoute: RouteGenerator.getRoute,
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              locale: context.locale,
-            ),
-          ));
+        designSize: const Size(1080, 1920),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, _) => MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthBloc>(create: (context) => sl()),
+            BlocProvider<HomeBloc>(create: (context) => sl()),
+          ],
+          child: MaterialApp(
+            title: AppStrings.appName,
+            theme: ThemeManager.lightTheme(),
+            onGenerateRoute: RouteGenerator.getRoute,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+          ),
+        ),
+      );
 }
