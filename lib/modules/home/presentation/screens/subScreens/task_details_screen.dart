@@ -197,7 +197,10 @@ class TaskDetailsScreen extends StatelessWidget {
                           } else {
                             BlocProvider.of<HomeBloc>(context).add(
                               EditTaskEvent(
-                                taskTodo: tempTask.copyWith(done: true),
+                                taskTodo: tempTask.copyWith(
+                                  done: true,
+                                  later: false,
+                                ),
                               ),
                             );
                           }

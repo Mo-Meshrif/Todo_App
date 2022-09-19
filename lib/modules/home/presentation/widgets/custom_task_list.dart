@@ -32,7 +32,7 @@ class CustomTaskList extends StatelessWidget {
             .map(
               (task) => Column(
                 children: [
-                  HelperFunctions.isExpired(task.date)&&!task.done
+                  HelperFunctions.isExpired(task.date) && !task.done
                       ? ClipRRect(
                           child: Banner(
                             message: AppStrings.expired.tr(),
@@ -96,7 +96,10 @@ class CustomTaskList extends StatelessWidget {
                                 if (direction == DismissDirection.startToEnd) {
                                   BlocProvider.of<HomeBloc>(context).add(
                                     EditTaskEvent(
-                                      taskTodo: task.copyWith(done: true),
+                                      taskTodo: task.copyWith(
+                                        done: true,
+                                        later: false,
+                                      ),
                                     ),
                                   );
                                 } else {
@@ -146,7 +149,10 @@ class CustomTaskList extends StatelessWidget {
                                   onDismissed: (direction) =>
                                       BlocProvider.of<HomeBloc>(context).add(
                                     EditTaskEvent(
-                                      taskTodo: task.copyWith(done: true),
+                                      taskTodo: task.copyWith(
+                                        done: true,
+                                        later: false,
+                                      ),
                                     ),
                                   ),
                                   child: ClipRRect(
