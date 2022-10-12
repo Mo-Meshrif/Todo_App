@@ -36,7 +36,7 @@ class TaskDetailsScreen extends StatelessWidget {
           children: [
             SizedBox(
               height: ScreenUtil().screenHeight * AppSize.s03,
-              child: const CustomAppBar(
+              child: CustomAppBar(
                 title: AppStrings.taskDetails,
               ),
             ),
@@ -120,9 +120,8 @@ class TaskDetailsScreen extends StatelessWidget {
                               AppStrings.noEditDone.tr(),
                             );
                           } else {
-                            showModalBottomSheet(
+                            showBottomSheet(
                               context: context,
-                              isScrollControlled: true,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(AppSize.s30.r),

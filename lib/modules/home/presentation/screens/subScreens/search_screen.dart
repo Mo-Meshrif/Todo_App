@@ -15,6 +15,7 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<TaskTodo> searchedList = [];
+    bool showEmpty = false;
     return WillPopScope(
       onWillPop: () {
         //use this event here to clear savedList when user exit and enter immediately
@@ -22,7 +23,7 @@ class SearchScreen extends StatelessWidget {
         return Future.value(true);
       },
       child: Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
           title: AppStrings.search,
         ),
         body: NestedScrollView(
@@ -52,10 +53,19 @@ class SearchScreen extends StatelessWidget {
                 if (index > -1) {
                   searchedList[index] = state.task!;
                 }
+              } else if (state is DeleteTaskLLoaded) {
+                int index =
+                    searchedList.indexWhere((task) => task.id == state.taskId);
+                if (index > -1) {
+                  searchedList.removeAt(index);
+                  showEmpty = searchedList.isEmpty;
+                }
               } else if (state is SearchedTaskLoaded) {
                 searchedList = state.searchedList;
+                showEmpty = searchedList.isEmpty;
               } else if (state is HomeTranstion) {
                 searchedList = [];
+                showEmpty = false;
               }
             },
             builder: (context, state) => state is SearchedTaskLoading
@@ -65,8 +75,7 @@ class SearchScreen extends StatelessWidget {
                         taskList: searchedList,
                       )
                     : Visibility(
-                        visible:
-                            state is SearchedTaskLoaded && searchedList.isEmpty,
+                        visible: showEmpty,
                         child: Lottie.asset(JsonAssets.empty),
                       ),
           ),

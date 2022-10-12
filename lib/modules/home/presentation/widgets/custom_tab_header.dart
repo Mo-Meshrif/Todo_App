@@ -1,14 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../app/utils/color_manager.dart';
+import '../../../../app/utils/strings_manager.dart';
 
 class TabHeader extends SliverPersistentHeaderDelegate {
-  final List<Widget> tabs;
   final void Function(int val) onTap;
   final double maxHeight;
   final double minHeight;
 
   TabHeader({
-    required this.tabs,
     required this.onTap,
     required this.maxHeight,
     required this.minHeight,
@@ -21,7 +21,11 @@ class TabHeader extends SliverPersistentHeaderDelegate {
       child: TabBar(
         onTap: onTap,
         indicatorColor: Colors.white,
-        tabs: tabs,
+        tabs: [
+          Tab(text: AppStrings.daily.tr()),
+          Tab(text: AppStrings.weekly.tr()),
+          Tab(text: AppStrings.monthly.tr()),
+        ],
       ),
     );
   }

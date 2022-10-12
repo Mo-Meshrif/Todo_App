@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:math' as math;
 import '../../modules/auth/domain/entities/user.dart';
 import '../../modules/home/presentation/controller/home_bloc.dart';
@@ -39,8 +40,9 @@ class HelperFunctions {
       {required BuildContext context,
       String? title,
       required Widget content,
-      List<AlertActionModel>? actions}) {
-    Platform.isAndroid
+      List<AlertActionModel>? actions,
+      bool forceAndroidStyle = false}) {
+    Platform.isAndroid || forceAndroidStyle
         ? showDialog(
             barrierDismissible: false,
             context: context,
@@ -196,5 +198,60 @@ class HelperFunctions {
     } else {
       return true;
     }
+  }
+
+  //datePicker
+  static showDataPicker(
+      {required BuildContext context,
+      required void Function() onSave,
+      required void Function(DateTime) onTimeChanged,
+      void Function()? onclose}) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => Material(
+        color: ColorManager.kWhite,
+        child: SizedBox(
+          height: ScreenUtil().screenHeight * AppSize.s035,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppPadding.p20,
+                    ),
+                    onPressed: onSave,
+                    icon: const Icon(Icons.save),
+                  ),
+                  IconButton(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppPadding.p20,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const Divider(
+                height: AppConstants.zeroVal,
+              ),
+              Expanded(
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  onDateTimeChanged: onTimeChanged,
+                  initialDateTime: DateTime.now(),
+                  minimumDate: DateTime.now().subtract(
+                    const Duration(seconds: 1),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).then(
+      (_) => onclose == null ? () {} : onclose(),
+    );
   }
 }

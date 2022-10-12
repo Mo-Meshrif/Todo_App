@@ -39,3 +39,8 @@ class GetSearchedTasksEvent extends HomeEvent {
 }
 
 class ClearSearchListEvent extends HomeEvent {}
+
+class GetCustomTasksEvent extends HomeEvent {
+  final String type;
+  const GetCustomTasksEvent(this.type);
+}

@@ -7,5 +7,5 @@ abstract class BaseHomeRespository {
   Future<Either<LocalFailure, bool>> addTask(TaskTodo taskTodo);
   Future<Either<LocalFailure, List<TaskTodo>>> getTasks(TaskInputs parameter);
   Future<Either<LocalFailure, TaskTodo?>> editTask(TaskTodo taskTodo);
-  Future<Either<LocalFailure, bool>> deleteTask(int taskId);
+  Future<Either<LocalFailure, int>> deleteTask(int taskId);
 }

@@ -79,10 +79,10 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   }
 
   @override
-  Future<Either<LocalFailure, bool>> deleteTask(int taskId) async {
+  Future<Either<LocalFailure, int>> deleteTask(int taskId) async {
     try {
-      final isDeleted = await baseHomeLocalDataSource.deleteTask(taskId);
-      return Right(isDeleted);
+      final id = await baseHomeLocalDataSource.deleteTask(taskId);
+      return Right(id);
     } on LocalExecption catch (failure) {
       return Left(LocalFailure(msg: failure.msg));
     }

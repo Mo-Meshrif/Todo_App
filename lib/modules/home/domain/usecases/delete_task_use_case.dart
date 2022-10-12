@@ -4,11 +4,11 @@ import '../../../../app/errors/failure.dart';
 import '../repositories/base_home_repository.dart';
 
 class DeleteTaskUseCase
-    implements BaseUseCase<Either<LocalFailure, bool>, int> {
+    implements BaseUseCase<Either<LocalFailure, int>, int> {
   final BaseHomeRespository baseHomeRespository;
 
   DeleteTaskUseCase(this.baseHomeRespository);
   @override
-  Future<Either<LocalFailure, bool>> call(int taskId) async =>
+  Future<Either<LocalFailure, int>> call(int taskId) async =>
       await baseHomeRespository.deleteTask(taskId);
 }

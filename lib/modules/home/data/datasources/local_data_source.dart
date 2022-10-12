@@ -9,7 +9,7 @@ abstract class BaseHomeLocalDataSource {
   Future<bool> addTask(TaskModel taskModel);
   Future<List<TaskModel>> getTasks(TaskInputs parameter);
   Future<TaskModel?> editTask(TaskModel taskModel);
-  Future<bool> deleteTask(int taskId);
+  Future<int> deleteTask(int taskId);
 }
 
 class HomeLocalDataSource implements BaseHomeLocalDataSource {
@@ -87,15 +87,15 @@ class HomeLocalDataSource implements BaseHomeLocalDataSource {
   }
 
   @override
-  Future<bool> deleteTask(int taskId) async {
+  Future<int> deleteTask(int taskId) async {
     try {
       var dbClient = await database;
-      int id = await dbClient!.delete(
+      int val = await dbClient!.delete(
         'tasks',
         where: 'id=?',
         whereArgs: [taskId],
       );
-      return id != 0 ? true : false;
+      return val == 1 ? taskId : -1;
     } on DatabaseException catch (e) {
       throw LocalExecption(e.toString());
     }

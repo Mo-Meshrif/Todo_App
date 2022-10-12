@@ -86,11 +86,11 @@ class DeleteTaskLoading extends HomeState {
 }
 
 class DeleteTaskLLoaded extends HomeState {
-  final bool isDeleted;
-  const DeleteTaskLLoaded({required this.isDeleted});
+  final int taskId;
+  const DeleteTaskLLoaded({required this.taskId});
 
   @override
-  List<Object?> get props => [isDeleted];
+  List<Object?> get props => [taskId];
 }
 
 class SearchedTaskLoading extends HomeState {
@@ -112,4 +112,17 @@ class HomeFailure extends HomeState {
 
   @override
   List<Object?> get props => [msg];
+}
+
+class CustomTaskLoading extends HomeState {
+  @override
+  List<Object?> get props => [];
+}
+
+class CustomTaskLoaded extends HomeState {
+  final List<TaskTodo> customList;
+  const CustomTaskLoaded({required this.customList});
+
+  @override
+  List<Object?> get props => [customList];
 }

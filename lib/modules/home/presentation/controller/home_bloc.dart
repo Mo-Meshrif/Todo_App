@@ -29,6 +29,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<EditTaskEvent>(_editTask);
     on<DeleteTaskEvent>(_deleteTask);
     on<GetSearchedTasksEvent>(_getSearchedTasks);
+    on<GetCustomTasksEvent>(_getCustomTasks);
     on<ClearSearchListEvent>(
       (event, emit) => emit(HomeTranstion()),
     );
@@ -111,7 +112,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final result = await deleteTaskUseCase(event.taskId);
     result.fold(
       (failure) => emit(HomeFailure(msg: failure.msg)),
-      (isDeleted) => emit(DeleteTaskLLoaded(isDeleted: isDeleted)),
+      (taskId) => emit(DeleteTaskLLoaded(taskId: taskId)),
     );
   }
 
@@ -130,5 +131,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         (tasks) => emit(SearchedTaskLoaded(searchedList: tasks)),
       );
     });
+  }
+
+  FutureOr<void> _getCustomTasks(
+      GetCustomTasksEvent event, Emitter<HomeState> emit) async {
+    emit(CustomTaskLoading());
+    final result = await _getTasks(
+      TaskInputs(
+        whereArgs: const [1],
+        where: event.type + '=?',
+      ),
+    );
+    result.fold(
+      (failure) => emit(HomeFailure(msg: failure.msg)),
+      (tasks) => emit(CustomTaskLoaded(customList: tasks)),
+    );
   }
 }

@@ -24,6 +24,7 @@ class ForgetPassword extends StatelessWidget {
         final GlobalKey<FormState> _forgetKey = GlobalKey<FormState>();
         HelperFunctions.showAlert(
           context: context,
+          forceAndroidStyle: true,
           title: AppStrings.forgetPassword.tr(),
           content: Form(
             key: _forgetKey,
