@@ -69,7 +69,7 @@ class ForgetPassword extends StatelessWidget {
           ],
         );
       },
-      style: TextButton.styleFrom(primary: ColorManager.border),
+      style: TextButton.styleFrom(foregroundColor: ColorManager.border),
       child: Text(AppStrings.forgetPassword.tr()),
     );
   }
