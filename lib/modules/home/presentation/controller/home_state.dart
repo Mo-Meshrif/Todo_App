@@ -126,3 +126,66 @@ class CustomTaskLoaded extends HomeState {
   @override
   List<Object?> get props => [customList];
 }
+
+class MessageLoading extends HomeState {
+  @override
+  List<Object> get props => [];
+}
+
+class MessageLoaded extends HomeState {
+  final bool val;
+
+  const MessageLoaded({required this.val});
+  @override
+  List<Object> get props => [val];
+}
+
+class MessageFailure extends HomeState {
+  final String msg;
+
+  const MessageFailure({required this.msg});
+  @override
+  List<Object> get props => [msg];
+}
+
+class ChatLoading extends HomeState {
+  @override
+  List<Object> get props => [];
+}
+
+class ChatLoaded extends HomeState {
+  final List<ChatMessage> messages;
+
+  const ChatLoaded({required this.messages});
+  @override
+  List<Object> get props => [messages];
+}
+
+class ChatFailure extends HomeState {
+  final String msg;
+
+  const ChatFailure({required this.msg});
+  @override
+  List<Object> get props => [msg];
+}
+
+class ProblemLoading extends HomeState {
+  @override
+  List<Object> get props => [];
+}
+
+class ProblemLoaded extends HomeState {
+  final bool val;
+
+  const ProblemLoaded({required this.val});
+  @override
+  List<Object> get props => [val];
+}
+
+class ProblemFailure extends HomeState {
+  final String msg;
+
+  const ProblemFailure({required this.msg});
+  @override
+  List<Object> get props => [msg];
+}

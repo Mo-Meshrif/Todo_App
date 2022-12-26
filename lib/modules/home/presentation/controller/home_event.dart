@@ -44,3 +44,27 @@ class GetCustomTasksEvent extends HomeEvent {
   final String type;
   const GetCustomTasksEvent(this.type);
 }
+
+class SendMessageEvent extends HomeEvent {
+  final ChatMessage chatMessage;
+  const SendMessageEvent(this.chatMessage);
+}
+
+class GetChatListEvent extends HomeEvent {
+  const GetChatListEvent();
+}
+
+class LoadChatListEvent extends HomeEvent {
+  final List<ChatMessage> messages;
+  const LoadChatListEvent(this.messages);
+}
+
+class UpdateMessageEvent extends HomeEvent {
+  final ChatMessage chatMessage;
+  const UpdateMessageEvent(this.chatMessage);
+}
+
+class SendProblemEvent extends HomeEvent {
+  final ProblemInput problemInput;
+  const SendProblemEvent(this.problemInput);
+}

@@ -3,11 +3,17 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../app/errors/failure.dart';
+import '../../../../app/helper/helper_functions.dart';
+import '../../domain/entities/chat_message.dart';
 import '../../domain/entities/task_to_do.dart';
 import '../../domain/usecases/add_task_use_case.dart';
 import '../../domain/usecases/delete_task_use_case.dart';
 import '../../domain/usecases/edit_task_use_case.dart';
+import '../../domain/usecases/get_chat_list_use_case.dart';
 import '../../domain/usecases/get_tasks_use_case.dart';
+import '../../domain/usecases/send_message_use_case.dart';
+import '../../domain/usecases/send_problem_use_case.dart';
+import '../../domain/usecases/update_message_use_case.dart';
 part 'home_event.dart';
 part 'home_state.dart';
 
@@ -16,11 +22,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetTasksUseCase getTasksUseCase;
   final EditTaskUseCase editTaskUseCase;
   final DeleteTaskUseCase deleteTaskUseCase;
+  final SendMessageUseCase sendMessageUseCase;
+  final GetChatListUseCae getChatListUseCae;
+  final UpdateMessageUseCase updateMessageUseCase;
+  final SendProblemUseCase sendProblemUseCase;
   HomeBloc({
     required this.addTaskUseCase,
     required this.getTasksUseCase,
     required this.editTaskUseCase,
     required this.deleteTaskUseCase,
+    required this.sendMessageUseCase,
+    required this.getChatListUseCae,
+    required this.updateMessageUseCase,
+    required this.sendProblemUseCase,
   }) : super(HomeInitial()) {
     on<AddTaskEvent>(_addTask);
     on<GetDailyTasksEvent>(_getDailyTasks);
@@ -30,9 +44,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<DeleteTaskEvent>(_deleteTask);
     on<GetSearchedTasksEvent>(_getSearchedTasks);
     on<GetCustomTasksEvent>(_getCustomTasks);
-    on<ClearSearchListEvent>(
-      (event, emit) => emit(HomeTranstion()),
-    );
+    on<ClearSearchListEvent>((_, emit) => emit(HomeTranstion()));
+    on<SendMessageEvent>(_sendMessage);
+    on<UpdateMessageEvent>(_updateMessage);
+    on<GetChatListEvent>(_getChatList);
+    on<LoadChatListEvent>(
+        (event, emit) => emit(ChatLoaded(messages: event.messages)));
+    on<SendProblemEvent>(_sendProblem);
   }
 
   FutureOr<void> _addTask(AddTaskEvent event, Emitter<HomeState> emit) async {
@@ -145,6 +163,48 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     result.fold(
       (failure) => emit(HomeFailure(msg: failure.msg)),
       (tasks) => emit(CustomTaskLoaded(customList: tasks)),
+    );
+  }
+
+  FutureOr<void> _sendMessage(
+      SendMessageEvent event, Emitter<HomeState> emit) async {
+    emit(MessageLoading());
+    final result = await sendMessageUseCase(event.chatMessage);
+    result.fold(
+      (failure) => emit(MessageFailure(msg: failure.msg)),
+      (val) => emit(MessageLoaded(val: val)),
+    );
+  }
+
+  FutureOr<void> _getChatList(
+      GetChatListEvent event, Emitter<HomeState> emit) async {
+    emit(ChatLoading());
+    final result = await getChatListUseCae(HelperFunctions.getSavedUser().id);
+    result.fold(
+      (failure) => emit(ChatFailure(msg: failure.msg)),
+      (streamResponse) => streamResponse.listen(
+        (messages) => add(LoadChatListEvent(messages)),
+      ),
+    );
+  }
+
+  FutureOr<void> _updateMessage(
+      UpdateMessageEvent event, Emitter<HomeState> emit) async {
+    emit(MessageLoading());
+    final result = await updateMessageUseCase(event.chatMessage);
+    result.fold(
+      (failure) => emit(MessageFailure(msg: failure.msg)),
+      (_) => emit(const MessageLoaded(val: true)),
+    );
+  }
+
+  FutureOr<void> _sendProblem(
+      SendProblemEvent event, Emitter<HomeState> emit) async {
+    emit(ProblemLoading());
+    final result = await sendProblemUseCase(event.problemInput);
+    result.fold(
+      (failure) => emit(ProblemFailure(msg: failure.msg)),
+      (_) => emit(const ProblemLoaded(val: true)),
     );
   }
 }

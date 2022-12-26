@@ -20,6 +20,13 @@
 		<string>$(FLUTTER_BUILD_NAME)</string>
 		<key>CFBundleSignature</key>
 		<string>????</string>
+		<key>NSMicrophoneUsageDescription</key>
+        <string>We need to access to the microphone to enable you to send voice message</string>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
 		<!-- Social Section -->
 		<key>CFBundleURLTypes</key>
 		<array>
@@ -74,5 +81,7 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-	</dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>

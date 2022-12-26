@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
@@ -7,12 +9,17 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
 import '../../modules/auth/domain/usecases/logout_use_case.dart';
 import '../../modules/home/data/datasources/local_data_source.dart';
+import '../../modules/home/data/datasources/remote_data_source.dart';
 import '../../modules/home/data/repositories/home_repository_impl.dart';
 import '../../modules/home/domain/repositories/base_home_repository.dart';
 import '../../modules/home/domain/usecases/add_task_use_case.dart';
 import '../../modules/home/domain/usecases/delete_task_use_case.dart';
 import '../../modules/home/domain/usecases/edit_task_use_case.dart';
+import '../../modules/home/domain/usecases/get_chat_list_use_case.dart';
 import '../../modules/home/domain/usecases/get_tasks_use_case.dart';
+import '../../modules/home/domain/usecases/send_message_use_case.dart';
+import '../../modules/home/domain/usecases/send_problem_use_case.dart';
+import '../../modules/home/domain/usecases/update_message_use_case.dart';
 import '../../modules/home/presentation/controller/home_bloc.dart';
 import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
 import '/modules/auth/presentation/controller/auth_bloc.dart';
@@ -39,6 +46,9 @@ class ServicesLocator {
     sl.registerLazySingleton<AppShared>(() => AppStorage(sl()));
     //Network services
     sl.registerLazySingleton<NetworkServices>(() => InternetCheckerLookup());
+    //Firebase messaging
+    final firebaseMessaging = FirebaseMessaging.instance;
+    sl.registerLazySingleton<FirebaseMessaging>(() => firebaseMessaging);
     //Firebase auth
     final firebaseAuth = FirebaseAuth.instance;
     sl.registerLazySingleton<FirebaseAuth>(() => firebaseAuth);
@@ -58,18 +68,24 @@ class ServicesLocator {
     //Google signIn
     final googleSignIn = GoogleSignIn(scopes: [AppConstants.googleScope]);
     sl.registerLazySingleton<GoogleSignIn>(() => googleSignIn);
+    //Firebase firestore
+    final firebaseStorage = FirebaseStorage.instance;
+    sl.registerLazySingleton<FirebaseStorage>(() => firebaseStorage);
     //DataSources
     sl.registerLazySingleton<BaseAuthRemoteDataSource>(
-      () => AuthRemoteDataSource(sl(), sl(), sl(), sl(), sl()),
+      () => AuthRemoteDataSource(sl(), sl(), sl(), sl(), sl(), sl()),
     );
     sl.registerLazySingleton<BaseHomeLocalDataSource>(
       () => HomeLocalDataSource.db,
+    );
+    sl.registerLazySingleton<BaseHomeRemoteDataSource>(
+      () => HomeRemoteDataSource(sl(), sl()),
     );
     //Repositories
     sl.registerLazySingleton<BaseAuthRepository>(
         () => AuthRepositoryImpl(sl(), sl()));
     sl.registerLazySingleton<BaseHomeRespository>(
-        () => HomeRepositoryImpl(sl()));
+        () => HomeRepositoryImpl(sl(), sl(), sl()));
     //UseCases
     sl.registerLazySingleton(() => LoginUseCase(sl()));
     sl.registerLazySingleton(() => SignUpUseCase(sl()));
@@ -83,6 +99,10 @@ class ServicesLocator {
     sl.registerLazySingleton(() => GetTasksUseCase(sl()));
     sl.registerLazySingleton(() => EditTaskUseCase(sl()));
     sl.registerLazySingleton(() => DeleteTaskUseCase(sl()));
+    sl.registerLazySingleton(() => SendMessageUseCase(sl()));
+    sl.registerLazySingleton(() => GetChatListUseCae(sl()));
+    sl.registerLazySingleton(() => UpdateMessageUseCase(sl()));
+    sl.registerLazySingleton(() => SendProblemUseCase(sl()));
     //blocs
     sl.registerFactory(
       () => AuthBloc(
@@ -102,6 +122,10 @@ class ServicesLocator {
         getTasksUseCase: sl(),
         editTaskUseCase: sl(),
         deleteTaskUseCase: sl(),
+        sendMessageUseCase: sl(),
+        getChatListUseCae: sl(),
+        updateMessageUseCase: sl(),
+        sendProblemUseCase: sl(),
       ),
     );
   }
