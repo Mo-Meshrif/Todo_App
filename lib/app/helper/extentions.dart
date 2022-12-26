@@ -65,3 +65,28 @@ extension DateConversion on DateTime {
     }
   }
 }
+
+extension StringConversion on String {
+  MessageType toMessageType() {
+    if (this == 'text') {
+      return MessageType.text;
+    } else if (this == 'voice') {
+      return MessageType.voice;
+    } else {
+      return MessageType.pic;
+    }
+  }
+}
+
+extension MessageTypeConversion on MessageType {
+  String toStringVal() {
+    switch (this) {
+      case MessageType.text:
+        return 'text';
+      case MessageType.voice:
+        return 'voice';
+      case MessageType.pic:
+        return 'pic';
+    }
+  }
+}

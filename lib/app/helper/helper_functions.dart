@@ -3,6 +3,7 @@ import 'package:arabic_numbers/arabic_numbers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:math' as math;
@@ -57,7 +58,8 @@ class HelperFunctions {
                   : actions
                       .map((action) => TextButton(
                             style: TextButton.styleFrom(
-                              primary: action.color ?? ColorManager.primary,
+                              backgroundColor:
+                                  action.color ?? ColorManager.primary,
                             ),
                             onPressed: action.onPressed,
                             child: Text(action.title).tr(),
@@ -119,6 +121,7 @@ class HelperFunctions {
             name: savedData['name'],
             email: savedData['email'],
             pic: savedData['pic'],
+            deviceToken: savedData['deviceToken'],
           )
         : savedData;
   }
@@ -172,7 +175,7 @@ class HelperFunctions {
     if (context.locale == AppConstants.arabic) {
       return ArabicNumbers().convert(number);
     } else {
-      return number;
+      return number.toString();
     }
   }
 
@@ -253,5 +256,20 @@ class HelperFunctions {
     ).then(
       (_) => onclose == null ? () {} : onclose(),
     );
+  }
+
+  //change language
+  static toggleLanguage(BuildContext context) {
+    if (context.locale == AppConstants.arabic) {
+      context.setLocale(AppConstants.english);
+    } else {
+      context.setLocale(AppConstants.arabic);
+    }
+  }
+
+  //convert ringTone to Uint8List
+  static Future<Uint8List> getAssetRingToneData(String path) async {
+    var asset = await rootBundle.load(path);
+    return asset.buffer.asUint8List();
   }
 }
