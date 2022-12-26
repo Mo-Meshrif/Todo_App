@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '/app/errors/exception.dart';
@@ -22,6 +23,7 @@ abstract class BaseAuthRemoteDataSource {
 }
 
 class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
+  final FirebaseMessaging firebaseMessaging;
   final FirebaseFirestore firebaseFirestore;
   final FirebaseAuth firebaseAuth;
   final FacebookAuth facebookAuth;
@@ -29,6 +31,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   final GoogleSignIn googleSignIn;
 
   AuthRemoteDataSource(
+    this.firebaseMessaging,
     this.firebaseFirestore,
     this.firebaseAuth,
     this.facebookAuth,
@@ -47,6 +50,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         name: userCredential.user!.displayName ?? AppConstants.emptyVal,
         email: userInputs.email,
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
+        deviceToken: await getDeviceToken(),
       );
       _uploadDataToFireStore(userModel);
       return userModel;
@@ -66,6 +70,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         name: userInputs.name,
         email: userInputs.email,
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
+        deviceToken: await getDeviceToken(),
       );
       _uploadDataToFireStore(userModel);
       return userModel;
@@ -156,6 +161,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         pic: user == null
             ? AppConstants.emptyVal
             : user.photoURL ?? AppConstants.emptyVal,
+        deviceToken: await getDeviceToken(),
       );
       _uploadDataToFireStore(userModel);
       return userModel;
@@ -202,11 +208,17 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         pic: user == null
             ? AppConstants.emptyVal
             : user.photoURL ?? AppConstants.emptyVal,
+        deviceToken: await getDeviceToken(),
       );
       _uploadDataToFireStore(userModel);
       return userModel;
     } else {
       throw ServerExecption(AppConstants.tryAgain);
     }
+  }
+
+  Future<String> getDeviceToken() async {
+    String? value = await firebaseMessaging.getToken();
+    return value ?? '';
   }
 }
