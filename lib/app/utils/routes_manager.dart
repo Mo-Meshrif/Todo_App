@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import '../../modules/home/domain/entities/task_to_do.dart';
 import '../../modules/home/presentation/screens/subScreens/custom_tasks_screen.dart';
+import '../../modules/home/presentation/screens/subScreens/help_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/notification_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/search_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/settings_screen.dart';
@@ -21,6 +22,7 @@ class Routes {
   static const String taskDetailsRoute = "/taskDetailsRoute";
   static const String customRoute = "/custom";
   static const String settingsRoute = "/settings";
+  static const String helpRoute = "/help";
 }
 
 class RouteGenerator {
@@ -48,6 +50,8 @@ class RouteGenerator {
         );
       case Routes.settingsRoute:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
+      case Routes.helpRoute:
+        return MaterialPageRoute(builder: (_) => const HelpScreen());
       default:
         return controlRoute();
     }

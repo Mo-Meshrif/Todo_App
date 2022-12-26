@@ -31,4 +31,9 @@ class AppConstants {
   static const double oneVal = 1.0;
   static const double zeroVal = 0.0;
   static const double twoVal = 2.0;
+  static const String ringToneKey = 'ringToneKey';
+  static const String androidAppId='aaaaaaaaaa';
+  static const String iOSAppId='aaaaaaaaaa';
+  static const String chatCollection = 'Chat';
+  static const String complaintsCollection = 'Complaints';
 }

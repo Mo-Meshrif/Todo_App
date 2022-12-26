@@ -66,6 +66,15 @@ class AppStrings {
   static const noChangeDone = 'noChangeDone';
   static const alreadyLater = 'alreadyLater';
   static const alreadyDone = 'alreadyDone';
-  static const expiryTask='expiryTask';
+  static const expiryTask = 'expiryTask';
   static const noDescp = 'noDescp';
+  static const sound = 'Sound';
+  static const help = 'Help';
+  static const problemDetails = 'problemDetails';
+  static const sendProblem = 'sendProblem';
+  static const chat = 'chat';
+  static const typeMessage = 'Type a message';
+  static const tapLock = 'Tap lock to stop';
+  static const slideCancel = 'Slide to cancel';
+  static const aboutText = 'AboutText';
 }

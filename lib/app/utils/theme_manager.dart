@@ -23,7 +23,7 @@ class ThemeManager {
       // elevated button them
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          primary: ColorManager.primary,
+          backgroundColor: ColorManager.primary,
         ),
       ),
     );
