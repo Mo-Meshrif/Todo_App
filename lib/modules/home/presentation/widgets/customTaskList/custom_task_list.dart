@@ -33,14 +33,16 @@ class CustomTaskList extends StatelessWidget {
               (task) => Column(
                 children: [
                   HelperFunctions.isExpired(task.date) && !task.done
-                      ? ClipRRect(
-                          child: Banner(
-                            message: AppStrings.expired.tr(),
-                            location: BannerLocation.topEnd,
-                            color: ColorManager.kBlack,
-                            child: TaskWidget(taskTodo: task),
-                          ),
-                        )
+                      ? task.later 
+                          ? const Padding(padding: EdgeInsets.zero)
+                          : ClipRRect(
+                              child: Banner(
+                                message: AppStrings.expired.tr(),
+                                location: BannerLocation.topEnd,
+                                color: ColorManager.kBlack,
+                                child: TaskWidget(taskTodo: task),
+                              ),
+                            )
                       : (!task.done && !task.later) ||
                               taskCategory != TaskCategory.all
                           ? Dismissible(
@@ -109,16 +111,15 @@ class CustomTaskList extends StatelessWidget {
                                       context: context,
                                       onSave: () {
                                         Navigator.pop(context);
-                                        BlocProvider.of<HomeBloc>(context)
-                                              .add(
-                                            EditTaskEvent(
-                                              taskTodo: task.copyWith(
-                                                later: true,
-                                                date: pickTime ??
-                                                    DateTime.now().toString(),
-                                              ),
+                                        BlocProvider.of<HomeBloc>(context).add(
+                                          EditTaskEvent(
+                                            taskTodo: task.copyWith(
+                                              later: true,
+                                              date: pickTime ??
+                                                  DateTime.now().toString(),
                                             ),
-                                          );
+                                          ),
+                                        );
                                       },
                                       onTimeChanged: (date) =>
                                           pickTime = date.toString());

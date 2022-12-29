@@ -7,6 +7,7 @@ import '../../../domain/entities/task_to_do.dart';
 import '../../controller/home_bloc.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/customTaskList/custom_task_list.dart';
+import '../../widgets/custom_scroll_to_top.dart';
 import '../../widgets/custom_text_search.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -71,9 +72,17 @@ class SearchScreen extends StatelessWidget {
             builder: (context, state) => state is SearchedTaskLoading
                 ? Lottie.asset(JsonAssets.search)
                 : searchedList.isNotEmpty
-                    ? CustomTaskList(
-                        taskList: searchedList,
-                      )
+                    ? CustomScrollToTop(
+                        builder: (context, properties) => SingleChildScrollView(
+                          controller: properties.scrollController,
+                          scrollDirection: properties.scrollDirection,
+                          reverse: properties.reverse,
+                          primary: properties.primary,
+                          child: CustomTaskList(
+                              taskList: searchedList,
+                            ),
+                        )
+                    )
                     : Visibility(
                         visible: showEmpty,
                         child: Lottie.asset(JsonAssets.empty),
