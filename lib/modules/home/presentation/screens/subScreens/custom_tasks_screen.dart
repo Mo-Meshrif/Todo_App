@@ -5,7 +5,7 @@ import '../../../../../app/common/models/custom_task_args_model.dart';
 import '../../../../../app/utils/assets_manager.dart';
 import '../../controller/home_bloc.dart';
 import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_task_list.dart';
+import '../../widgets/customTaskList/custom_task_list.dart';
 
 class CustomTasksScreen extends StatelessWidget {
   final CustomTaskArgsModel args;

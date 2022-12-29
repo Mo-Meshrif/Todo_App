@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as format;
-import '../../../../app/helper/enums.dart';
-import '../../../../app/helper/helper_functions.dart';
-import '../../../../app/utils/color_manager.dart';
-import '../../../../app/utils/constants_manager.dart';
-import '../../../../app/utils/strings_manager.dart';
-import '../../../../app/utils/values_manager.dart';
-import '../../domain/entities/task_to_do.dart';
+import '../../../../../app/helper/enums.dart';
+import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
+import '../../../../../app/utils/strings_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
+import '../../../domain/entities/task_to_do.dart';
 
 class AddEditTaskWidget extends StatelessWidget {
   final TaskTodo? editTask;
@@ -67,9 +67,10 @@ class AddEditTaskWidget extends StatelessWidget {
                           }
                         },
                       );
-                      dateController.text =
-                          format.DateFormat('d-M-yyyy | h:mm a')
-                              .format(dateTime!);
+                      dateController.text = format.DateFormat(
+                        'd-M-yyyy | h:mm a',
+                        context.locale.languageCode,
+                      ).format(dateTime!);
                       Navigator.pop(context);
                     },
                     onTimeChanged: (value) =>

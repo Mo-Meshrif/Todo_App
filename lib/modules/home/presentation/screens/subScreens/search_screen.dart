@@ -6,7 +6,7 @@ import '../../../../../app/utils/strings_manager.dart';
 import '../../../domain/entities/task_to_do.dart';
 import '../../controller/home_bloc.dart';
 import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_task_list.dart';
+import '../../widgets/customTaskList/custom_task_list.dart';
 import '../../widgets/custom_text_search.dart';
 
 class SearchScreen extends StatelessWidget {

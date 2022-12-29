@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../app/helper/helper_functions.dart';
-import '../../../../app/utils/color_manager.dart';
-import '../../../../app/utils/routes_manager.dart';
-import '../controller/home_bloc.dart';
+import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/routes_manager.dart';
+import '../../controller/home_bloc.dart';
 import '/app/helper/extentions.dart';
-import '../../../../app/utils/assets_manager.dart';
-import '../../../../app/utils/values_manager.dart';
-import '../../domain/entities/task_to_do.dart';
+import '../../../../../app/utils/assets_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
+import '../../../domain/entities/task_to_do.dart';
 
 class TaskWidget extends StatelessWidget {
   const TaskWidget({

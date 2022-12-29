@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as format;
-import '../../../../app/utils/strings_manager.dart';
-import '../../../../app/utils/values_manager.dart';
-import '../../domain/entities/task_to_do.dart';
+import '../../../../../app/utils/strings_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
+import '../../../domain/entities/task_to_do.dart';
 
 class TaskDetailsWidget extends StatelessWidget {
   const TaskDetailsWidget({
@@ -57,7 +57,10 @@ class TaskDetailsWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppSize.s10),
             ),
           ),
-          child: Text(format.DateFormat('d-M-yyyy | h:mm a').format(
+          child: Text(format.DateFormat(
+            'd-M-yyyy | h:mm a',
+            context.locale.languageCode,
+          ).format(
             DateTime.parse(task.date),
           )),
         ),

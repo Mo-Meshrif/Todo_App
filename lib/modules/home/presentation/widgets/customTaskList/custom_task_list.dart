@@ -2,16 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../app/helper/enums.dart';
-import '../../../../app/helper/helper_functions.dart';
-import '../../../../app/utils/assets_manager.dart';
-import '../../../../app/utils/color_manager.dart';
-import '../../../../app/utils/constants_manager.dart';
-import '../../../../app/utils/strings_manager.dart';
-import '../../../../app/utils/values_manager.dart';
-import '../../domain/entities/task_to_do.dart';
-import '../controller/home_bloc.dart';
-import 'custom_task_widget.dart';
+import '../../../../../app/helper/enums.dart';
+import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/utils/assets_manager.dart';
+import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
+import '../../../../../app/utils/strings_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
+import '../../../domain/entities/task_to_do.dart';
+import '../../controller/home_bloc.dart';
+import '../customTask/custom_task_widget.dart';
 
 class CustomTaskList extends StatelessWidget {
   final TaskCategory taskCategory;
@@ -92,7 +92,7 @@ class CustomTaskList extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              onDismissed: (direction) {
+                              confirmDismiss: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
                                   BlocProvider.of<HomeBloc>(context).add(
                                     EditTaskEvent(
@@ -102,12 +102,27 @@ class CustomTaskList extends StatelessWidget {
                                       ),
                                     ),
                                   );
+                                  return Future.value(false);
                                 } else {
-                                  BlocProvider.of<HomeBloc>(context).add(
-                                    EditTaskEvent(
-                                      taskTodo: task.copyWith(later: true),
-                                    ),
-                                  );
+                                  String? pickTime;
+                                  HelperFunctions.showDataPicker(
+                                      context: context,
+                                      onSave: () {
+                                        Navigator.pop(context);
+                                        BlocProvider.of<HomeBloc>(context)
+                                              .add(
+                                            EditTaskEvent(
+                                              taskTodo: task.copyWith(
+                                                later: true,
+                                                date: pickTime ??
+                                                    DateTime.now().toString(),
+                                              ),
+                                            ),
+                                          );
+                                      },
+                                      onTimeChanged: (date) =>
+                                          pickTime = date.toString());
+                                  return Future.value(false);
                                 }
                               },
                               child: TaskWidget(taskTodo: task),

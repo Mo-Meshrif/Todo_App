@@ -12,9 +12,9 @@ import '../../../../../app/utils/strings_manager.dart';
 import '../../../../../app/utils/values_manager.dart';
 import '../../../domain/entities/task_to_do.dart';
 import '../../controller/home_bloc.dart';
-import '../../widgets/custom_add_edit_task.dart';
+import '../../widgets/customTask/custom_add_edit_task.dart';
 import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_task_details.dart';
+import '../../widgets/customTask/custom_task_details.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
   final TaskTodo task;
@@ -42,12 +42,8 @@ class TaskDetailsScreen extends StatelessWidget {
             ),
             Card(
               elevation: AppConstants.twoVal,
-              margin: const EdgeInsets.fromLTRB(
-                AppPadding.p15,
-                AppPadding.p80,
-                AppPadding.p15,
-                AppPadding.p70,
-              ),
+              margin: EdgeInsets.symmetric(
+                  vertical: AppPadding.p230.h, horizontal: AppPadding.p15),
               child: ClipRRect(
                 child: HelperFunctions.isExpired(task.date) && !task.done
                     ? Banner(
@@ -79,143 +75,160 @@ class TaskDetailsScreen extends StatelessWidget {
               right: AppConstants.zeroVal,
               child: Container(
                 color: ColorManager.kWhite,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppPadding.p20,
-                  vertical: AppPadding.p15,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () => HelperFunctions.showAlert(
-                        context: context,
-                        content: const Text(AppStrings.deleteTask).tr(),
-                        actions: [
-                          AlertActionModel(
-                            title: AppStrings.cancel,
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                          AlertActionModel(
-                            title: AppStrings.delete.tr(),
-                            onPressed: () {
-                              BlocProvider.of<HomeBloc>(context).add(
-                                DeleteTaskEvent(taskId: tempTask.id!),
-                              );
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                      child: SvgPicture.asset(
-                        IconAssets.delete,
-                        width: AppSize.s15,
-                      ),
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppPadding.p20,
+                      vertical: AppPadding.p15,
                     ),
-                    InkWell(
-                      onTap: () {
-                        if (!HelperFunctions.isExpired(task.date)) {
-                          if (tempTask.done) {
-                            HelperFunctions.showSnackBar(
-                              context,
-                              AppStrings.noEditDone.tr(),
-                            );
-                          } else {
-                            showBottomSheet(
-                              context: context,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(AppSize.s30.r),
-                                  topRight: Radius.circular(AppSize.s30.r),
-                                ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () => HelperFunctions.showAlert(
+                            context: context,
+                            content: const Text(AppStrings.deleteTask).tr(),
+                            actions: [
+                              AlertActionModel(
+                                title: AppStrings.cancel,
+                                onPressed: () => Navigator.of(context).pop(),
                               ),
-                              builder: (context) => AddEditTaskWidget(
-                                editTask: tempTask,
-                                editFun: (value) =>
-                                    context.read<HomeBloc>().add(
-                                          EditTaskEvent(
-                                            taskTodo: value,
-                                          ),
-                                        ),
+                              AlertActionModel(
+                                title: AppStrings.delete.tr(),
+                                onPressed: () {
+                                  BlocProvider.of<HomeBloc>(context).add(
+                                    DeleteTaskEvent(taskId: tempTask.id!),
+                                  );
+                                  Navigator.of(context).pop();
+                                },
                               ),
-                            );
-                          }
-                        } else {
-                          HelperFunctions.showSnackBar(
-                            context,
-                            AppStrings.expiryTask.tr(),
-                          );
-                        }
-                      },
-                      child: SvgPicture.asset(
-                        IconAssets.edit,
-                        width: AppSize.s15,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        if (!HelperFunctions.isExpired(task.date)) {
-                          if (tempTask.done) {
-                            HelperFunctions.showSnackBar(
-                              context,
-                              AppStrings.noChangeDone.tr(),
-                            );
-                          } else {
-                            if (tempTask.later) {
+                            ],
+                          ),
+                          child: SvgPicture.asset(
+                            IconAssets.delete,
+                            width: AppSize.s15,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (!HelperFunctions.isExpired(task.date)) {
+                              if (tempTask.done) {
+                                HelperFunctions.showSnackBar(
+                                  context,
+                                  AppStrings.noEditDone.tr(),
+                                );
+                              } else {
+                                showBottomSheet(
+                                  context: context,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(AppSize.s30.r),
+                                      topRight: Radius.circular(AppSize.s30.r),
+                                    ),
+                                  ),
+                                  builder: (context) => AddEditTaskWidget(
+                                    editTask: tempTask,
+                                    editFun: (value) =>
+                                        context.read<HomeBloc>().add(
+                                              EditTaskEvent(
+                                                taskTodo: value,
+                                              ),
+                                            ),
+                                  ),
+                                );
+                              }
+                            } else {
                               HelperFunctions.showSnackBar(
                                 context,
-                                AppStrings.alreadyLater.tr(),
-                              );
-                            } else {
-                              BlocProvider.of<HomeBloc>(context).add(
-                                EditTaskEvent(
-                                  taskTodo: tempTask.copyWith(later: true),
-                                ),
+                                AppStrings.expiryTask.tr(),
                               );
                             }
-                          }
-                        } else {
-                          HelperFunctions.showSnackBar(
-                            context,
-                            AppStrings.expiryTask.tr(),
-                          );
-                        }
-                      },
-                      child: SvgPicture.asset(
-                        IconAssets.later,
-                        width: AppSize.s20,
-                      ),
+                          },
+                          child: SvgPicture.asset(
+                            IconAssets.edit,
+                            width: AppSize.s15,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (!HelperFunctions.isExpired(task.date)) {
+                              if (tempTask.done) {
+                                HelperFunctions.showSnackBar(
+                                  context,
+                                  AppStrings.noChangeDone.tr(),
+                                );
+                              } else {
+                                if (tempTask.later) {
+                                  HelperFunctions.showSnackBar(
+                                    context,
+                                    AppStrings.alreadyLater.tr(),
+                                  );
+                                } else {
+                                  String? pickTime;
+                                  HelperFunctions.showDataPicker(
+                                      context: context,
+                                      onSave: () {
+                                        Navigator.pop(context);
+                                        BlocProvider.of<HomeBloc>(context).add(
+                                          EditTaskEvent(
+                                            taskTodo: task.copyWith(
+                                              later: true,
+                                              date: pickTime ??
+                                                  DateTime.now().toString(),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      onTimeChanged: (date) =>
+                                          pickTime = date.toString());
+                                }
+                              }
+                            } else {
+                              HelperFunctions.showSnackBar(
+                                context,
+                                AppStrings.expiryTask.tr(),
+                              );
+                            }
+                          },
+                          child: SvgPicture.asset(
+                            IconAssets.later,
+                            width: AppSize.s20,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (!HelperFunctions.isExpired(task.date)) {
+                              if (tempTask.done) {
+                                HelperFunctions.showSnackBar(
+                                  context,
+                                  AppStrings.alreadyDone.tr(),
+                                );
+                              } else {
+                                BlocProvider.of<HomeBloc>(context).add(
+                                  EditTaskEvent(
+                                    taskTodo: tempTask.copyWith(
+                                      done: true,
+                                      later: false,
+                                    ),
+                                  ),
+                                );
+                              }
+                            } else {
+                              HelperFunctions.showSnackBar(
+                                context,
+                                AppStrings.expiryTask.tr(),
+                              );
+                            }
+                          },
+                          child: SvgPicture.asset(
+                            IconAssets.done,
+                            width: AppSize.s20,
+                          ),
+                        ),
+                      ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        if (!HelperFunctions.isExpired(task.date)) {
-                          if (tempTask.done) {
-                            HelperFunctions.showSnackBar(
-                              context,
-                              AppStrings.alreadyDone.tr(),
-                            );
-                          } else {
-                            BlocProvider.of<HomeBloc>(context).add(
-                              EditTaskEvent(
-                                taskTodo: tempTask.copyWith(
-                                  done: true,
-                                  later: false,
-                                ),
-                              ),
-                            );
-                          }
-                        } else {
-                          HelperFunctions.showSnackBar(
-                            context,
-                            AppStrings.expiryTask.tr(),
-                          );
-                        }
-                      },
-                      child: SvgPicture.asset(
-                        IconAssets.done,
-                        width: AppSize.s20,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             )
