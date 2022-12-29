@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '/app/helper/extentions.dart';
 import '../../../../app/errors/exception.dart';
 import '../../../../app/errors/failure.dart';
 import '../../../../app/helper/helper_functions.dart';
@@ -33,7 +34,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
           category: taskTodo.category,
           date: taskTodo.date,
           day: date.day,
-          week: date.weekday,
+          week: date.weekOfMonth(),
           month: date.month,
           year: date.year,
           priority: taskTodo.priority,
@@ -72,7 +73,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
           category: taskTodo.category,
           date: taskTodo.date,
           day: date.day,
-          week: date.weekday,
+          week: date.weekOfMonth(),
           month: date.month,
           year: date.year,
           priority: taskTodo.priority,

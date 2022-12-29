@@ -6,10 +6,12 @@ import 'package:intl/intl.dart' as format;
 import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/color_manager.dart';
+import '../../../../app/utils/constants_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
 import '../../../../app/utils/values_manager.dart';
 import '../controller/home_bloc.dart';
-import '../widgets/custom_task_list.dart';
+import '../widgets/customTaskList/custom_task_list.dart';
+import '../widgets/custom_scroll_to_top.dart';
 
 class DailyTask extends StatelessWidget {
   const DailyTask({Key? key}) : super(key: key);
@@ -28,84 +30,99 @@ class DailyTask extends StatelessWidget {
           current is DailyTaskLoaded || current is DailyTaskLoading,
       builder: (context, state) => state is DailyTaskLoaded
           ? state.dailyList.isNotEmpty
-              ? ListView(
-                  padding: EdgeInsets.zero,
+              ? Column(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(AppPadding.p15),
-                      color: ColorManager.background,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppPadding.p15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${HelperFunctions.welcome().tr()} ${HelperFunctions.lastUserName()}'),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    AppStrings.today,
-                                    style: TextStyle(
-                                      color: ColorManager.primary,
-                                    ),
-                                  ).tr(),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        AppStrings.completed,
-                                        style: TextStyle(
-                                          color: ColorManager.kGreen,
-                                        ),
-                                      ).tr(),
-                                      RichText(
-                                        text: TextSpan(
-                                          style: TextStyle(
-                                              color: ColorManager.kGreen),
-                                          children: [
-                                            TextSpan(
-                                              text: HelperFunctions
-                                                      .doneTasksLength(
-                                                    context,
-                                                    state.dailyList,
-                                                  ) +
-                                                  '/',
-                                            ),
-                                            TextSpan(
-                                              text: HelperFunctions
-                                                  .getlocaleNumber(
-                                                context,
-                                                state.dailyList.length,
-                                              ),
-                                              style: TextStyle(
-                                                color: ColorManager.kRed,
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                    Card(
+                      margin: const EdgeInsets.fromLTRB(
+                        AppPadding.p15,
+                        AppPadding.p15,
+                        AppPadding.p15,
+                        AppConstants.zeroVal,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppPadding.p15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                '${HelperFunctions.welcome().tr()} ${HelperFunctions.lastUserName()}'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  AppStrings.today,
+                                  style: TextStyle(
+                                    color: ColorManager.primary,
+                                  ),
+                                ).tr(),
+                                Column(
+                                  children: [
+                                    Text(
+                                      AppStrings.completed,
+                                      style: TextStyle(
+                                        color: ColorManager.kGreen,
                                       ),
-                                    ],
-                                  )
-                                ],
+                                    ).tr(),
+                                    RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                            color: ColorManager.kGreen),
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                HelperFunctions.doneTasksLength(
+                                                      context,
+                                                      state.dailyList,
+                                                    ) +
+                                                    '/',
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                HelperFunctions.getlocaleNumber(
+                                              context,
+                                              state.dailyList.length,
+                                            ),
+                                            style: TextStyle(
+                                              color: ColorManager.kRed,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            Text(
+                              format.DateFormat(
+                                'd-M-yyyy',
+                                context.locale.languageCode,
+                              ).format(
+                                DateTime.now(),
                               ),
-                              Text(
-                                format.DateFormat('d-M-yyyy').format(
-                                  DateTime.now(),
-                                ),
-                              ),
-                            ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppPadding.p15),
+                    Expanded(
+                      child: CustomScrollToTop(
+                        builder: (context, properties) => SingleChildScrollView(
+                          controller: properties.scrollController,
+                          scrollDirection: properties.scrollDirection,
+                          reverse: properties.reverse,
+                          primary: properties.primary,
+                          padding: const EdgeInsets.only(top: AppPadding.p12),
+                          child: CustomTaskList(
+                            taskList: state.dailyList,
                           ),
                         ),
                       ),
                     ),
-                    CustomTaskList(
-                      taskList: state.dailyList,
-                    ),
                   ],
                 )
-              : Lottie.asset(JsonAssets.allDone)
+              : Lottie.asset(JsonAssets.addTask)
           : const Center(
               child: CircularProgressIndicator(),
             ),

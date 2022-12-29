@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,7 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthUser user = HelperFunctions.getSavedUser();
     List<DrawerItemModel> pageList = [
       DrawerItemModel(
         title: AppStrings.important,
@@ -110,37 +112,61 @@ class CustomDrawer extends StatelessWidget {
         height: ScreenUtil().screenHeight,
         child: Column(
           children: [
-            Builder(builder: (context) {
-              AuthUser user = HelperFunctions.getSavedUser();
-              return Container(
-                width: double.infinity,
-                height: AppSize.s390.h,
-                color: ColorManager.primary,
-                padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: ColorManager.primaryLight,
-                      radius: AppSize.s110.r,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: AppSize.s100.r,
-                        backgroundImage:
-                            user.pic != null ? NetworkImage(user.pic!) : null,
+            FutureBuilder<File?>(
+              future: HelperFunctions.loadUserPic(user),
+              builder: (context, snapshot) {
+                File? pic = snapshot.hasData ? snapshot.data : null;
+                return Container(
+                  width: double.infinity,
+                  height: AppSize.s390.h,
+                  color: ColorManager.primary,
+                  padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SafeArea(
+                        left: false,
+                        right: false,
+                        bottom: false,
+                        child: CircleAvatar(
+                          backgroundColor: ColorManager.primaryLight,
+                          radius: AppSize.s110.r,
+                          child: snapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? CircleAvatar(
+                                  backgroundColor: ColorManager.primary,
+                                  radius: AppSize.s100.r,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.all(AppPadding.p10),
+                                    child: CircularProgressIndicator(
+                                      color: ColorManager.primary,
+                                    ),
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: AppSize.s100.r,
+                                  backgroundImage: pic != null
+                                      ? FileImage(pic)
+                                      : const AssetImage(
+                                              ImageAssets.placeHolder)
+                                          as ImageProvider,
+                                ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: AppSize.s10.h,
-                    ),
-                    Text(
-                      user.name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                      SizedBox(
+                        height: AppSize.s10.h,
+                      ),
+                      Text(
+                        user.name.isEmpty ? AppStrings.user.tr() : user.name,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),

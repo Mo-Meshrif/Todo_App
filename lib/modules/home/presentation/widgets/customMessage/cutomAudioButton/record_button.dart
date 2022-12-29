@@ -73,7 +73,7 @@ class _RecordButtonState extends State<RecordButton>
         curve: const Interval(0.2, 1, curve: Curves.easeIn),
       ),
     );
-    lockerAnimation = Tween<double>(begin: lockerHeight + 15, end: 0).animate(
+    lockerAnimation = Tween<double>(begin: lockerHeight + 80, end: 0).animate(
       CurvedAnimation(
         parent: controller,
         curve: const Interval(0.2, 1, curve: Curves.easeIn),

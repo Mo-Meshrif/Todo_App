@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import '/app/helper/extentions.dart';
 import '../../../../app/errors/failure.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../../domain/entities/chat_message.dart';
@@ -68,7 +69,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     DateTime date = DateTime.now();
     final result = await _getTasks(
       TaskInputs(
-        whereArgs: [date.day, date.weekday, date.month, date.year],
+        whereArgs: [date.day, date.weekOfMonth(), date.month, date.year],
         where: 'day=? AND week=? AND month=? AND year=?',
       ),
     );
@@ -85,7 +86,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     DateTime date = DateTime.now();
     final result = await _getTasks(
       TaskInputs(
-        whereArgs: [date.weekday, date.month, date.year],
+        whereArgs: [date.weekOfMonth(), date.month, date.year],
         where: 'week=? AND month=? AND year=?',
       ),
     );
