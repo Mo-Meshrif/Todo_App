@@ -14,7 +14,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   flutter_screenutil: ^5.5.3+2
-  easy_localization: ^3.0.0
+  easy_localization: ^3.0.1
   equatable: ^2.0.5
   flutter_svg: ^1.0.3
   flutter_bloc: ^8.1.1
@@ -39,6 +39,8 @@ dependencies:
   flutter_vibrate: ^1.1.0
   launch_review: ^3.0.1
   voice_message_package: ^0.0.74
+  http: ^0.13.5
+  flutter_scroll_to_top: ^2.0.0
 
 dev_dependencies:
   flutter_native_splash: ^2.1.6

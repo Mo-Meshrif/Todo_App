@@ -77,4 +77,12 @@ class AppStrings {
   static const tapLock = 'Tap lock to stop';
   static const slideCancel = 'Slide to cancel';
   static const aboutText = 'AboutText';
+  static const user = 'User';
+  static const monday = 'MON';
+  static const tuesday = 'TUE';
+  static const wednesday = 'WED';
+  static const thursday = 'THU';
+  static const friday = 'FRI';
+  static const saturaday = 'SAT';
+  static const sunday = 'SUN';
 }

@@ -74,54 +74,57 @@ class MessageWidget extends StatelessWidget {
             Card(
               elevation: 20,
               margin: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Row(
-                  children: [
-                    const SizedBox(width: 10),
-                    Visibility(
-                      visible: !hideChatBox,
-                      child: Expanded(
-                        child: TextFormField(
-                          controller: textEditingController,
-                          onChanged: (value) => innerState(
-                            () => message = value,
-                          ),
-                          textInputAction: TextInputAction.done,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            hintText: AppStrings.typeMessage.tr(),
-                            hintStyle: const TextStyle(color: Colors.black),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(color: Colors.grey),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Visibility(
+                        visible: !hideChatBox,
+                        child: Expanded(
+                          child: TextFormField(
+                            controller: textEditingController,
+                            onChanged: (value) => innerState(
+                              () => message = value,
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(color: Colors.grey),
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: AppStrings.typeMessage.tr(),
+                              hintStyle: const TextStyle(color: Colors.black),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    message.isNotEmpty
-                        ? IconButton(
-                            onPressed: () => sendMessage(message).then(
-                              (_) => textEditingController.clear(),
-                            ),
-                            icon: const Icon(
-                              Icons.send,
-                              color: Colors.blue,
-                            ),
-                          )
-                        : RecordButton(
-                            sendRecord: (recordPath) => sendRecord(recordPath),
-                            getTapStatus: (tapStatus) => innerState(
-                              () => hideChatBox = tapStatus,
-                            ),
-                          )
-                  ],
+                      message.isNotEmpty
+                          ? IconButton(
+                              onPressed: () => sendMessage(message).then(
+                                (_) => textEditingController.clear(),
+                              ),
+                              icon: const Icon(
+                                Icons.send,
+                                color: Colors.blue,
+                              ),
+                            )
+                          : RecordButton(
+                              sendRecord: (recordPath) => sendRecord(recordPath),
+                              getTapStatus: (tapStatus) => innerState(
+                                () => hideChatBox = tapStatus,
+                              ),
+                            )
+                    ],
+                  ),
                 ),
               ),
             )

@@ -6,6 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 import 'dart:math' as math;
 import '../../modules/auth/domain/entities/user.dart';
 import '../../modules/home/presentation/controller/home_bloc.dart';
@@ -124,6 +126,44 @@ class HelperFunctions {
             deviceToken: savedData['deviceToken'],
           )
         : savedData;
+  }
+
+  //loadUserPic
+  static Future<File?> loadUserPic(AuthUser user) async {
+    AppShared _appShared = sl<AppShared>();
+    if (user.pic != null) {
+      if (user.pic!.isNotEmpty) {
+        String img = user.pic!.split('/').last;
+        String savedPic = _appShared.getVal(AppConstants.userPicKey) ?? '';
+        bool isExists = File(savedPic).existsSync();
+        if (savedPic.isEmpty
+            ? true
+            : isExists
+                ? savedPic.split('/').last != img
+                : true) {
+          http.Response response = await http.get(Uri.parse(user.pic!));
+          if (response.statusCode != 404) {
+            final bytes = response.bodyBytes;
+            var temp = await getTemporaryDirectory();
+            final path = '${temp.path}/$img';
+            File(path).writeAsBytesSync(bytes);
+            _appShared.setVal(
+              AppConstants.userPicKey,
+              path,
+            );
+            return File(path);
+          } else {
+            return null;
+          }
+        } else {
+          return File(savedPic);
+        }
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   //getLastUserName
@@ -271,5 +311,79 @@ class HelperFunctions {
   static Future<Uint8List> getAssetRingToneData(String path) async {
     var asset = await rootBundle.load(path);
     return asset.buffer.asUint8List();
+  }
+
+  //getNumberOfDayByIndex
+  static DateTime getDateByIndex(int index) {
+    DateTime now = DateTime.now();
+    return now.add(Duration(days: index + 1 - now.weekday));
+  }
+
+  //get month
+  static String getMonth(int monthAsInt) {
+    late String month;
+    switch (monthAsInt) {
+      case 1:
+        month = "January";
+        break;
+      case 2:
+        month = "February";
+        break;
+      case 3:
+        month = "March";
+        break;
+      case 4:
+        month = "April";
+        break;
+      case 5:
+        month = "May";
+        break;
+      case 6:
+        month = "June";
+        break;
+      case 7:
+        month = "July";
+        break;
+      case 8:
+        month = "August";
+        break;
+      case 9:
+        month = "September";
+        break;
+      case 10:
+        month = "October";
+        break;
+      case 11:
+        month = "November";
+        break;
+      case 12:
+        month = "December";
+        break;
+    }
+    return month;
+  }
+
+  //refactor weeklyTaskList
+  static List<Map<String, dynamic>> refactorWeeklyTaskList(
+      List<TaskTodo> weeklyList) {
+    List<Map<String, dynamic>> tempList = [];
+    for (var item in weeklyList) {
+      DateTime date = DateTime.parse(item.date);
+      int indexTemp =
+          tempList.indexWhere((element) => element['day'] == date.day);
+      if (indexTemp > -1) {
+        (tempList[indexTemp]['tasks'] as List).add(item);
+      } else {
+        tempList.add(
+          {
+            'day': date.day,
+            'month': date.month,
+            'tasks': [item],
+          },
+        );
+      }
+    }
+    tempList.sort((a, b) => a['day'].compareTo(b['day']));
+    return tempList;
   }
 }

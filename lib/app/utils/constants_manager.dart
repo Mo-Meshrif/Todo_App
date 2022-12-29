@@ -36,4 +36,5 @@ class AppConstants {
   static const String iOSAppId='aaaaaaaaaa';
   static const String chatCollection = 'Chat';
   static const String complaintsCollection = 'Complaints';
+  static const String userPicKey = 'userPicKey';
 }
