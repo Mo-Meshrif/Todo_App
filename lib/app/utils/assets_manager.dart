@@ -40,4 +40,5 @@ class JsonAssets {
   static const String addTask = "$jsonPath/addTask.json";
   static const String empty = "$jsonPath/empty.json";
   static const String search = "$jsonPath/search.json";
+  static const String tap = "$jsonPath/tap.json";
 }

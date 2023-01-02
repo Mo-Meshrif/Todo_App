@@ -4,7 +4,7 @@ import '../../domain/entities/task_to_do.dart';
 
 class TaskModel extends TaskTodo {
   final String uid;
-  final int day, week, month, year;
+  final int day, firstDayOfWeek, endDayOfWeek, month, year;
   const TaskModel({
     int? id,
     required this.uid,
@@ -13,7 +13,8 @@ class TaskModel extends TaskTodo {
     required String category,
     required String date,
     required this.day,
-    required this.week,
+    required this.firstDayOfWeek,
+    required this.endDayOfWeek,
     required this.month,
     required this.year,
     required TaskPriority priority,
@@ -39,7 +40,8 @@ class TaskModel extends TaskTodo {
         category: map['category'],
         date: map['date'],
         day: map['day'],
-        week: map['week'],
+        firstDayOfWeek: map['firstDayOfWeek'],
+        endDayOfWeek:map['endDayOfWeek'] ,
         month: map['month'],
         year: map['year'],
         priority: (map['priority'] as int).toPriority(),
@@ -54,7 +56,8 @@ class TaskModel extends TaskTodo {
         'category': category,
         'date': date,
         'day': day,
-        'week': week,
+        'firstDayOfWeek': firstDayOfWeek,
+        'endDayOfWeek':endDayOfWeek,
         'month': month,
         'year': year,
         'priority': priority.toInt(),

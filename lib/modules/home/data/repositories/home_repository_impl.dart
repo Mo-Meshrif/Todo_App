@@ -26,6 +26,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   Future<Either<LocalFailure, bool>> addTask(TaskTodo taskTodo) async {
     try {
       final DateTime date = DateTime.parse(taskTodo.date);
+      int firstDayOfWeek = date.firstDayOfWeek();
       final isAdded = await baseHomeLocalDataSource.addTask(
         TaskModel(
           uid: HelperFunctions.getSavedUser().id,
@@ -34,7 +35,8 @@ class HomeRepositoryImpl implements BaseHomeRespository {
           category: taskTodo.category,
           date: taskTodo.date,
           day: date.day,
-          week: date.weekOfMonth(),
+          firstDayOfWeek: firstDayOfWeek,
+          endDayOfWeek: firstDayOfWeek + 6,
           month: date.month,
           year: date.year,
           priority: taskTodo.priority,
@@ -64,6 +66,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   Future<Either<LocalFailure, TaskTodo?>> editTask(TaskTodo taskTodo) async {
     try {
       final DateTime date = DateTime.parse(taskTodo.date);
+      int firstDayOfWeek = date.firstDayOfWeek();
       final task = await baseHomeLocalDataSource.editTask(
         TaskModel(
           id: taskTodo.id,
@@ -73,7 +76,8 @@ class HomeRepositoryImpl implements BaseHomeRespository {
           category: taskTodo.category,
           date: taskTodo.date,
           day: date.day,
-          week: date.weekOfMonth(),
+          firstDayOfWeek: firstDayOfWeek,
+          endDayOfWeek: firstDayOfWeek + 6,
           month: date.month,
           year: date.year,
           priority: taskTodo.priority,

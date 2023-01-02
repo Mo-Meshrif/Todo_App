@@ -123,8 +123,10 @@ class DailyTask extends StatelessWidget {
                   ],
                 )
               : Lottie.asset(JsonAssets.addTask)
-          : const Center(
-              child: CircularProgressIndicator(),
+          : Center(
+              child: CircularProgressIndicator(
+                color: ColorManager.primary,
+              ),
             ),
     );
   }

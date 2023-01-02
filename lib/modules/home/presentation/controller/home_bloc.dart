@@ -69,8 +69,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     DateTime date = DateTime.now();
     final result = await _getTasks(
       TaskInputs(
-        whereArgs: [date.day, date.weekOfMonth(), date.month, date.year],
-        where: 'day=? AND week=? AND month=? AND year=?',
+        whereArgs: [date.day, date.firstDayOfWeek(), date.month, date.year],
+        where: 'day=? AND firstDayOfWeek=? AND month=? AND year=?',
       ),
     );
 
@@ -84,12 +84,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       GetWeeklyTasksEvent event, Emitter<HomeState> emit) async {
     emit(WeeklyTaskLoading());
     DateTime date = DateTime.now();
-    final result = await _getTasks(
-      TaskInputs(
-        whereArgs: [date.weekOfMonth(), date.month, date.year],
-        where: 'week=? AND month=? AND year=?',
-      ),
-    );
+    final result = await _getTasks(_weekInputs(date));
     result.fold(
       (failure) => emit(HomeFailure(msg: failure.msg)),
       (tasks) => emit(WeeklyTaskLoaded(weeklyList: tasks)),
@@ -100,11 +95,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       GetMonthlyTasksEvent event, Emitter<HomeState> emit) async {
     emit(MonthlyTaskLoading());
     DateTime date = event.date;
+    //The method of work is determined based on the customer's choice (week or month)
     final result = await _getTasks(
-      TaskInputs(
-        whereArgs: [date.month, date.year],
-        where: 'month=? AND year=?',
-      ),
+      event.sortedByMonth == true
+          ? TaskInputs(
+              whereArgs: [date.month, date.year],
+              where: 'month=? AND year=?',
+            )
+          : _weekInputs(date),
     );
     result.fold(
       (failure) => emit(HomeFailure(msg: failure.msg)),
@@ -206,6 +204,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     result.fold(
       (failure) => emit(ProblemFailure(msg: failure.msg)),
       (_) => emit(const ProblemLoaded(val: true)),
+    );
+  }
+
+  TaskInputs _weekInputs(DateTime date) {
+    int firstDayOfWeek = date.firstDayOfWeek();
+    return TaskInputs(
+      whereArgs: [firstDayOfWeek, firstDayOfWeek + 6, date.year],
+      where: 'firstDayOfWeek=? AND endDayOfWeek=? AND year=?',
     );
   }
 }

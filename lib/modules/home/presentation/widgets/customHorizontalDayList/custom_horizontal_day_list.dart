@@ -37,7 +37,7 @@ class CustomHorizontalDayList extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(vertical: AppPadding.p10),
           child: Text(
-            month.tr() + ',' + ' ' + year,
+            month.tr() + ' ' + year,
             style: TextStyle(
               fontSize: AppSize.s50.sp,
               fontWeight: FontWeight.bold,

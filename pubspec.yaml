@@ -41,6 +41,7 @@ dependencies:
   voice_message_package: ^0.0.74
   http: ^0.13.5
   flutter_scroll_to_top: ^2.0.0
+  table_calendar: ^3.0.8
 
 dev_dependencies:
   flutter_native_splash: ^2.1.6

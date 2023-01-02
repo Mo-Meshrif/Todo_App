@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/utils/assets_manager.dart';
+import '../../../../app/utils/color_manager.dart';
 import '../controller/home_bloc.dart';
 import '../widgets/customHorizontalDayList/custom_horizontal_day_list.dart';
 import '../widgets/customTaskList/cutom_task_list_tile.dart';
@@ -39,7 +40,7 @@ class WeeklyTask extends StatelessWidget {
               ? StatefulBuilder(
                   builder: (context, weeklyState) {
                     if (tempList.isEmpty) {
-                      tempList = HelperFunctions.refactorWeeklyTaskList(
+                      tempList = HelperFunctions.refactorTaskList(
                         state.weeklyList,
                       );
                     }
@@ -111,8 +112,10 @@ class WeeklyTask extends StatelessWidget {
                   },
                 )
               : Lottie.asset(JsonAssets.addTask)
-          : const Center(
-              child: CircularProgressIndicator(),
+          : Center(
+              child: CircularProgressIndicator(
+                color: ColorManager.primary,
+              ),
             ),
     );
   }

@@ -65,16 +65,14 @@ extension DateConversion on DateTime {
     }
   }
 
-  int weekOfMonth() {
+  int firstDayOfWeek() {
     var date = this;
-    final firstDayOfTheMonth = DateTime(date.year, date.month, 1);
-    int sum = firstDayOfTheMonth.weekday - 1 + date.day;
-    if (sum % 7 == 0) {
-      return sum ~/ 7;
-    } else {
-      return sum ~/ 7 + 1;
-    }
+    var weekDay = date.weekday;
+    var firstDayOfWeek = date.subtract(Duration(days: weekDay));
+    return firstDayOfWeek.day + 1;
   }
+
+  DateTime zeroTime() => DateTime(year, month, day, 0, 0).toUtc();
 }
 
 extension StringConversion on String {

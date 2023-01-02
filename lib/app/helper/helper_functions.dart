@@ -221,26 +221,9 @@ class HelperFunctions {
 
   //isExpired
   static bool isExpired(String date) {
-    //hint: we use custom fun because other funs compare all but we need only year,month,week and day
-    DateTime dateTime = DateTime.parse(date);
-    DateTime now = DateTime.now();
-    if (dateTime.year >= now.year) {
-      if (dateTime.month >= now.month) {
-        if (dateTime.weekday >= now.weekday) {
-          if (dateTime.day >= now.day) {
-            return false;
-          } else {
-            return true;
-          }
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
+    DateTime dateTime = DateTime.parse(date).zeroTime();
+    DateTime now = DateTime.now().zeroTime();
+    return dateTime.isBefore(now);
   }
 
   //datePicker
@@ -363,11 +346,10 @@ class HelperFunctions {
     return month;
   }
 
-  //refactor weeklyTaskList
-  static List<Map<String, dynamic>> refactorWeeklyTaskList(
-      List<TaskTodo> weeklyList) {
+  //refactor taskList
+  static List<Map<String, dynamic>> refactorTaskList(List<TaskTodo> taskList) {
     List<Map<String, dynamic>> tempList = [];
-    for (var item in weeklyList) {
+    for (var item in taskList) {
       DateTime date = DateTime.parse(item.date);
       int indexTemp =
           tempList.indexWhere((element) => element['day'] == date.day);

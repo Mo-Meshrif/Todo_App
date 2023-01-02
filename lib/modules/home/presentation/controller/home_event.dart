@@ -18,8 +18,12 @@ class GetWeeklyTasksEvent extends HomeEvent {}
 
 class GetMonthlyTasksEvent extends HomeEvent {
   final DateTime date;
+  final bool? sortedByMonth;
 
-  const GetMonthlyTasksEvent({required this.date});
+  const GetMonthlyTasksEvent({
+    required this.date,
+    this.sortedByMonth = true,
+  });
 }
 
 class EditTaskEvent extends HomeEvent {

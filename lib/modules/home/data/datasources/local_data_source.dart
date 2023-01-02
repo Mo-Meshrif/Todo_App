@@ -32,7 +32,7 @@ class HomeLocalDataSource implements BaseHomeLocalDataSource {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,uid TEXT NOT NULL,name TEXT NOT NULL, description TEXT NOT NULL, category TEXT NOT NULL,date TEXT NOT NULL, day INTEGER NOT NULL,week INTEGER NOT NULL,month INTEGER NOT NULL,year INTEGER NOT NULL,priority INTEGER NOT NULL,important INTEGER NOT NULL,done INTEGER NOT NULL,later INTEGER NOT NULL)');
+            'CREATE TABLE tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,uid TEXT NOT NULL,name TEXT NOT NULL, description TEXT NOT NULL, category TEXT NOT NULL,date TEXT NOT NULL, day INTEGER NOT NULL,firstDayOfWeek INTEGER NOT NULL,endDayOfWeek INTEGER NOT NULL,month INTEGER NOT NULL,year INTEGER NOT NULL,priority INTEGER NOT NULL,important INTEGER NOT NULL,done INTEGER NOT NULL,later INTEGER NOT NULL)');
       },
     );
   }
