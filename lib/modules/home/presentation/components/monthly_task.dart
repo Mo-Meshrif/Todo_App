@@ -22,7 +22,7 @@ class MonthlyTask extends StatelessWidget {
     DateTime tappedDate = DateTime.now();
     DateTime selectedDate = DateTime.now();
     List<Map<String, dynamic>> tempList = [];
-    CalendarFormat calendarFormat = CalendarFormat.week;
+    CalendarFormat calendarFormat = CalendarFormat.month;
     bool hideTask = false;
     return StatefulBuilder(
       builder: (context, monthlyState) => CustomScrollToTop(

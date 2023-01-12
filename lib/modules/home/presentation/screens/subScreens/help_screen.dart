@@ -75,9 +75,15 @@ class _HelpScreenState extends State<HelpScreen> {
               visible: problemController.text.isNotEmpty,
               child: BlocConsumer<HomeBloc, HomeState>(
                 listener: (context, state) {
-                  if (state is ProblemLoaded) {
+                  if (state is ProblemLoading) {
+                    HelperFunctions.showPopUpLoading(context);
+                  } else if (state is ProblemLoaded) {
+                    Navigator.pop(context);
                     if (state.val) {
                       problemController.clear();
+                      HelperFunctions.showSnackBar(context, AppStrings.problemScussfully.tr());
+                    } else {
+                      HelperFunctions.showSnackBar(context, AppStrings.operationFailed.tr());
                     }
                   }
                 },

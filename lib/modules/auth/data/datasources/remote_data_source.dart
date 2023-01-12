@@ -52,8 +52,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
-      _uploadDataToFireStore(userModel);
-      return userModel;
+      return _uploadDataToFireStore(userModel);
     } catch (e) {
       throw ServerExecption(e.toString());
     }
@@ -72,8 +71,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
-      _uploadDataToFireStore(userModel);
-      return userModel;
+      return _uploadDataToFireStore(userModel);
     } catch (e) {
       throw ServerExecption(e.toString());
     }
@@ -163,8 +161,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
             : user.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
-      _uploadDataToFireStore(userModel);
-      return userModel;
+      return _uploadDataToFireStore(userModel);
     } on FirebaseAuthException catch (e) {
       if (e.code == AppConstants.differentCredential) {
         return _link(e.credential!);
@@ -174,21 +171,28 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
     }
   }
 
-  Future<void> _uploadDataToFireStore(UserModel userModel) async {
+  Future<UserModel> _uploadDataToFireStore(UserModel userModel) async {
     final QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await firebaseFirestore
             .collection(AppConstants.usersCollection)
             .where(AppConstants.userIdFeild, isEqualTo: userModel.id)
             .get();
     if (querySnapshot.docs.isNotEmpty) {
+      var doc = querySnapshot.docs.first;
+      var tempUser = userModel.copyWith(
+        name: userModel.name.isEmpty ? doc.data()['name'] : userModel.name,
+        pic: userModel.pic ?? doc.data()['pic'],
+      );
       firebaseFirestore
           .collection(AppConstants.usersCollection)
-          .doc(querySnapshot.docs[0].id)
-          .update(userModel.toJson());
+          .doc(doc.id)
+          .update(tempUser.toJson());
+      return tempUser;
     } else {
       firebaseFirestore
           .collection(AppConstants.usersCollection)
           .add(userModel.toJson());
+      return userModel;
     }
   }
 

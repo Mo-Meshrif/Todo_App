@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -103,7 +104,12 @@ class CustomDrawer extends StatelessWidget {
           HelperFunctions.showPopUpLoading(context);
         } else if (state is AuthLogoutSuccess) {
           sl<AppShared>().removeVal(AppConstants.authPassKey);
-          Navigator.of(context).pushReplacementNamed(Routes.authRoute);
+          sl<AppShared>().setVal(AppConstants.authPassKey, false);
+          sl<FirebaseMessaging>().unsubscribeFromTopic(AppConstants.toUser);
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.authRoute,
+            (route) => false,
+          );
         }
       },
       child: Container(
@@ -118,7 +124,6 @@ class CustomDrawer extends StatelessWidget {
                 File? pic = snapshot.hasData ? snapshot.data : null;
                 return Container(
                   width: double.infinity,
-                  height: AppSize.s390.h,
                   color: ColorManager.primary,
                   padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),
                   child: Column(

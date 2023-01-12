@@ -55,13 +55,7 @@ class AddEditTaskWidget extends StatelessWidget {
                       innerState(
                         () {
                           if (tempTime == null) {
-                            if (editTask == null) {
-                              dateTime = DateTime.now();
-                            } else {
-                              dateTime = DateTime.parse(
-                                editTask!.date,
-                              );
-                            }
+                            dateTime = DateTime.now();
                           } else {
                             dateTime = tempTime;
                           }

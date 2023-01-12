@@ -1,10 +1,14 @@
+import 'package:badges/badges.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../../../../app/common/models/notifiy_model.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/utils/assets_manager.dart';
+import '../../../../app/utils/constants_manager.dart';
 import '../../../../app/utils/routes_manager.dart';
 import '../../../../app/utils/values_manager.dart';
 import '../controller/home_bloc.dart';
@@ -14,7 +18,8 @@ class CustomAppBar extends AppBar {
   CustomAppBar({
     Key? key,
     String? title,
-    bool isNotifiy = false,
+    bool hideNotifyIcon = false,
+    Widget? clearNotify,
   }) : super(
           key: key,
           leading: title != null
@@ -35,7 +40,7 @@ class CustomAppBar extends AppBar {
                           ),
                         ),
                       )),
-          centerTitle: isNotifiy,
+          centerTitle: hideNotifyIcon,
           title: title != null
               ? Text(title).tr()
               : SvgPicture.asset(
@@ -43,22 +48,48 @@ class CustomAppBar extends AppBar {
                   width: AppSize.s120,
                 ),
           actions: [
-            Visibility(
-              visible: !isNotifiy,
-              child: Builder(
-                  builder: (context) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppPadding.p10),
-                        child: GestureDetector(
-                          onTap: () => Navigator.of(context)
-                              .pushNamed(Routes.notificationRoute),
-                          child: SvgPicture.asset(
-                            IconAssets.alarm,
-                            width: AppSize.s25,
-                          ),
-                        ),
-                      )),
-            ),
+            Builder(builder: (context) {
+              var notificationList = Hive.box(AppConstants.notificaionKey);
+              return ValueListenableBuilder(
+                valueListenable: notificationList.listenable(),
+                builder: (context, _, __) {
+                  String uid = HelperFunctions.getSavedUser().id;
+                  List<ReceivedNotifyModel> savedList = notificationList.values
+                      .map((e) => ReceivedNotifyModel.fromJson(
+                          Map<String, dynamic>.from(e)))
+                      .toList();
+                  List<ReceivedNotifyModel> items = savedList
+                      .where((e) =>
+                          (e.from == uid && e.type == 'Task') || e.to == uid)
+                      .toList();
+                  List<ReceivedNotifyModel> notOpenedList =
+                      items.where((e) => !e.isOpened).toList();
+                  return clearNotify != null && items.isNotEmpty
+                      ? clearNotify
+                      : hideNotifyIcon
+                          ? const Padding(padding: EdgeInsets.zero)
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: AppPadding.p10),
+                              child: Badge(
+                                position:
+                                    BadgePosition.topEnd(top: 12, end: 15),
+                                showBadge: notOpenedList.isNotEmpty,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                    Routes.notificationRoute,
+                                    arguments: items,
+                                  ),
+                                  child: SvgPicture.asset(
+                                    IconAssets.alarm,
+                                    width: AppSize.s25,
+                                  ),
+                                ),
+                              ),
+                            );
+                },
+              );
+            }),
             Visibility(
               visible: title == null,
               child: Builder(
